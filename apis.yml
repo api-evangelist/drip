@@ -1,0 +1,65 @@
+aid: drip
+name: Drip
+description: >-
+  Drip is an email marketing and marketing automation platform built for
+  ecommerce brands that combines subscriber management, segmentation, email
+  campaigns, automation workflows, and shopper activity tracking. The Drip
+  REST API gives programmatic access to subscribers, campaigns, events,
+  workflows, broadcasts, orders, carts, and webhooks using either API token
+  Basic authentication or OAuth 2.0.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Email Marketing
+  - Marketing Automation
+  - Ecommerce
+  - Customer Engagement
+  - Campaigns
+  - Workflows
+url: >-
+  https://raw.githubusercontent.com/api-evangelist/drip/refs/heads/main/apis.yml
+created: '2026-05-11'
+modified: '2026-05-11'
+specificationVersion: '0.19'
+apis:
+  - aid: drip:drip-api
+    name: Drip REST API
+    description: >-
+      REST API for Drip exposing subscribers, tags, custom fields, broadcasts,
+      email campaigns, events, conversions, workflows, shopper activity
+      (orders, carts, products), purchases, and webhooks. Supports both API
+      token Basic authentication for private integrations and OAuth 2.0 for
+      public apps, with a rate limit of 3,600 requests per hour.
+    humanURL: https://developer.drip.com/
+    baseURL: https://api.getdrip.com/v2
+    tags:
+      - Email Marketing
+      - Marketing Automation
+      - Subscribers
+      - Campaigns
+      - Workflows
+    properties:
+      - type: Documentation
+        url: https://developer.drip.com/
+      - type: Authentication
+        url: https://developer.drip.com/#authentication
+common:
+  - type: Website
+    url: https://www.drip.com
+  - type: Documentation
+    url: https://developer.drip.com/
+  - type: Sign Up
+    url: https://www.drip.com/forms/79091116/submissions/new
+  - type: Pricing
+    url: https://www.drip.com/pricing
+  - type: Login
+    url: https://www.getdrip.com/login
+  - type: Support
+    url: https://help.drip.com/
+  - type: Blog
+    url: https://www.drip.com/learn
+  - type: GitHub Organization
+    url: https://github.com/DripEmail
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
