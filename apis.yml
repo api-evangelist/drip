@@ -44,6 +44,8 @@ apis:
       - type: Authentication
         url: https://developer.drip.com/#authentication
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/getdrip
   - type: Website
     url: https://www.drip.com
   - type: Documentation
