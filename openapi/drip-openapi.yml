@@ -1,0 +1,253 @@
+openapi: 3.1.0
+info:
+  title: Drip REST API
+  version: "2.0.0"
+  description: >-
+    Best-effort OpenAPI for the Drip email marketing and marketing automation
+    REST API covering accounts, broadcasts, campaigns, subscribers, events,
+    conversions, forms, orders, custom fields, and the v3 shopper activity
+    endpoints for carts, orders, and products.
+  contact:
+    name: API Evangelist
+    email: kin@apievangelist.com
+    url: https://developer.drip.com/
+servers:
+  - url: https://api.getdrip.com
+    description: Drip API
+security:
+  - basicAuth: []
+  - bearerAuth: []
+tags:
+  - name: Accounts
+  - name: Broadcasts
+  - name: Campaigns
+  - name: Subscribers
+  - name: Events
+  - name: Conversions
+  - name: Forms
+  - name: Orders
+  - name: Custom Fields
+  - name: Shopper Activity
+paths:
+  /v2/accounts:
+    get:
+      tags: [Accounts]
+      summary: List all accounts the authenticated user has access to
+      operationId: listAccounts
+      responses:
+        "200": { description: A page of accounts }
+  /v2/accounts/{account_id}:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    get:
+      tags: [Accounts]
+      summary: Fetch an account
+      operationId: getAccount
+      responses:
+        "200": { description: An account }
+  /v2/{account_id}/broadcasts:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    get:
+      tags: [Broadcasts]
+      summary: List single-email broadcasts
+      operationId: listBroadcasts
+      responses:
+        "200": { description: A page of broadcasts }
+  /v2/{account_id}/broadcasts/{broadcast_id}:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+      - name: broadcast_id
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Broadcasts]
+      summary: Fetch a broadcast
+      operationId: getBroadcast
+      responses:
+        "200": { description: A broadcast }
+  /v2/{account_id}/campaigns:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    get:
+      tags: [Campaigns]
+      summary: List email series campaigns
+      operationId: listCampaigns
+      responses:
+        "200": { description: A page of campaigns }
+  /v2/{account_id}/campaigns/{campaign_id}:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+      - $ref: "#/components/parameters/CampaignId"
+    get:
+      tags: [Campaigns]
+      summary: Fetch an email series campaign
+      operationId: getCampaign
+      responses:
+        "200": { description: A campaign }
+  /v2/{account_id}/campaigns/{campaign_id}/activate:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+      - $ref: "#/components/parameters/CampaignId"
+    post:
+      tags: [Campaigns]
+      summary: Activate an email series campaign
+      operationId: activateCampaign
+      responses:
+        "204": { description: Activated }
+  /v2/{account_id}/campaigns/{campaign_id}/pause:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+      - $ref: "#/components/parameters/CampaignId"
+    post:
+      tags: [Campaigns]
+      summary: Pause an email series campaign
+      operationId: pauseCampaign
+      responses:
+        "204": { description: Paused }
+  /v2/{account_id}/campaigns/{campaign_id}/subscribers:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+      - $ref: "#/components/parameters/CampaignId"
+    get:
+      tags: [Campaigns]
+      summary: List subscribers of a campaign
+      operationId: listCampaignSubscribers
+      responses:
+        "200": { description: Subscribers }
+    post:
+      tags: [Campaigns]
+      summary: Subscribe someone to a campaign
+      operationId: subscribeToCampaign
+      responses:
+        "200": { description: Subscribed }
+  /v2/{account_id}/subscribers/batches:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    post:
+      tags: [Subscribers]
+      summary: Batch create or update subscribers
+      operationId: batchSubscribers
+      responses:
+        "201": { description: Batch accepted }
+  /v2/{account_id}/unsubscribes/batches:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    post:
+      tags: [Subscribers]
+      summary: Batch unsubscribe people
+      operationId: batchUnsubscribes
+      responses:
+        "201": { description: Batch accepted }
+  /v2/{account_id}/events:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    post:
+      tags: [Events]
+      summary: Record a single event
+      operationId: recordEvent
+      responses:
+        "204": { description: Event recorded }
+  /v2/{account_id}/events/batches:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    post:
+      tags: [Events]
+      summary: Batch record events
+      operationId: batchEvents
+      responses:
+        "201": { description: Batch accepted }
+  /v2/{account_id}/event_actions:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    get:
+      tags: [Events]
+      summary: List custom event actions
+      operationId: listEventActions
+      responses:
+        "200": { description: Event actions }
+  /v2/{account_id}/goals:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    get:
+      tags: [Conversions]
+      summary: List conversions
+      operationId: listGoals
+      responses:
+        "200": { description: Goals }
+  /v2/{account_id}/forms:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    get:
+      tags: [Forms]
+      summary: List forms
+      operationId: listForms
+      responses:
+        "200": { description: Forms }
+  /v2/{account_id}/orders:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    post:
+      tags: [Orders]
+      summary: Create or update an order (legacy)
+      operationId: createOrUpdateOrder
+      responses:
+        "201": { description: Order accepted }
+  /v2/{account_id}/custom_field_identifiers:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    get:
+      tags: [Custom Fields]
+      summary: List custom field identifiers
+      operationId: listCustomFields
+      responses:
+        "200": { description: Custom fields }
+  /v3/{account_id}/shopper_activity/cart/batch:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    post:
+      tags: [Shopper Activity]
+      summary: Batch create or update carts (v3 shopper activity)
+      operationId: batchShopperCarts
+      responses:
+        "201": { description: Accepted }
+  /v3/{account_id}/shopper_activity/order/batch:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    post:
+      tags: [Shopper Activity]
+      summary: Batch create or update orders (v3 shopper activity)
+      operationId: batchShopperOrders
+      responses:
+        "201": { description: Accepted }
+  /v3/{account_id}/shopper_activity/product/batch:
+    parameters:
+      - $ref: "#/components/parameters/AccountId"
+    post:
+      tags: [Shopper Activity]
+      summary: Batch create or update products (v3 shopper activity)
+      operationId: batchShopperProducts
+      responses:
+        "201": { description: Accepted }
+components:
+  parameters:
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      schema: { type: string }
+    CampaignId:
+      name: campaign_id
+      in: path
+      required: true
+      schema: { type: string }
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: API token used as username with empty password
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: OAuth2 access token
