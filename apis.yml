@@ -50,7 +50,7 @@ common:
     url: https://www.drip.com
   - type: Documentation
     url: https://developer.drip.com/
-  - type: SignUp
+  - type: Signup
     url: https://www.drip.com/forms/79091116/submissions/new
   - type: Pricing
     url: https://www.drip.com/pricing
