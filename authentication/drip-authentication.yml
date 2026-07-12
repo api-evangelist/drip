@@ -1,0 +1,19 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/drip-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: API token used as username with empty password
+  sources:
+  - openapi/drip-openapi.yml
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: OAuth2 access token
+  sources:
+  - openapi/drip-openapi.yml
