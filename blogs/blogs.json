@@ -2,11 +2,13 @@
   "repo": "drip",
   "feeds": [
     {
-      "source": "https://www.drip.com/learn",
+      "source": "https://help.drip.com/",
+      "feed_url": "https://help.drip.com/",
+      "title": "",
       "saved": 0,
-      "error": "HTTP 403 Forbidden"
+      "method": "none"
     }
   ],
   "post_count": 10,
-  "fetched": "2026-06-27T12:38:07Z"
+  "fetched": "2026-07-11T11:50:51Z"
 }
