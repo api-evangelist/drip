@@ -44,6 +44,8 @@ apis:
       - type: Authentication
         url: https://developer.drip.com/#authentication
 common:
+  - type: AgenticAccess
+    url: agentic-access/drip-agentic-access.yml
   - type: DomainSecurity
     url: security/drip-domain-security.yml
   - type: Authentication
