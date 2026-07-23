@@ -1,0 +1,55 @@
+openapi: 3.1.0
+info:
+  title: Drip REST Accounts API
+  version: 2.0.0
+  description: Best-effort OpenAPI for the Drip email marketing and marketing automation REST API covering accounts, broadcasts, campaigns, subscribers, events, conversions, forms, orders, custom fields, and the v3 shopper activity endpoints for carts, orders, and products.
+  contact:
+    name: API Evangelist
+    email: kin@apievangelist.com
+    url: https://developer.drip.com/
+servers:
+- url: https://api.getdrip.com
+  description: Drip API
+security:
+- basicAuth: []
+- bearerAuth: []
+tags:
+- name: Accounts
+paths:
+  /v2/accounts:
+    get:
+      tags:
+      - Accounts
+      summary: List all accounts the authenticated user has access to
+      operationId: listAccounts
+      responses:
+        '200':
+          description: A page of accounts
+  /v2/accounts/{account_id}:
+    parameters:
+    - $ref: '#/components/parameters/AccountId'
+    get:
+      tags:
+      - Accounts
+      summary: Fetch an account
+      operationId: getAccount
+      responses:
+        '200':
+          description: An account
+components:
+  parameters:
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: API token used as username with empty password
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: OAuth2 access token

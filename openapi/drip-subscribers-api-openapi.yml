@@ -1,0 +1,57 @@
+openapi: 3.1.0
+info:
+  title: Drip REST Accounts Subscribers API
+  version: 2.0.0
+  description: Best-effort OpenAPI for the Drip email marketing and marketing automation REST API covering accounts, broadcasts, campaigns, subscribers, events, conversions, forms, orders, custom fields, and the v3 shopper activity endpoints for carts, orders, and products.
+  contact:
+    name: API Evangelist
+    email: kin@apievangelist.com
+    url: https://developer.drip.com/
+servers:
+- url: https://api.getdrip.com
+  description: Drip API
+security:
+- basicAuth: []
+- bearerAuth: []
+tags:
+- name: Subscribers
+paths:
+  /v2/{account_id}/subscribers/batches:
+    parameters:
+    - $ref: '#/components/parameters/AccountId'
+    post:
+      tags:
+      - Subscribers
+      summary: Batch create or update subscribers
+      operationId: batchSubscribers
+      responses:
+        '201':
+          description: Batch accepted
+  /v2/{account_id}/unsubscribes/batches:
+    parameters:
+    - $ref: '#/components/parameters/AccountId'
+    post:
+      tags:
+      - Subscribers
+      summary: Batch unsubscribe people
+      operationId: batchUnsubscribes
+      responses:
+        '201':
+          description: Batch accepted
+components:
+  parameters:
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: API token used as username with empty password
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: OAuth2 access token
