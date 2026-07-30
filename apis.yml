@@ -8,7 +8,19 @@ description: >-
   workflows, broadcasts, orders, carts, and webhooks using either API token
   Basic authentication or OAuth 2.0.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/drip.png
 tags:
   - Email Marketing
   - Marketing Automation
@@ -22,27 +34,126 @@ created: '2026-05-11'
 modified: '2026-05-11'
 specificationVersion: '0.19'
 apis:
-  - aid: drip:drip-api
-    name: Drip REST API
-    description: >-
-      REST API for Drip exposing subscribers, tags, custom fields, broadcasts,
-      email campaigns, events, conversions, workflows, shopper activity
-      (orders, carts, products), purchases, and webhooks. Supports both API
-      token Basic authentication for private integrations and OAuth 2.0 for
-      public apps, with a rate limit of 3,600 requests per hour.
-    humanURL: https://developer.drip.com/
-    baseURL: https://api.getdrip.com/v2
-    tags:
-      - Email Marketing
-      - Marketing Automation
-      - Subscribers
-      - Campaigns
-      - Workflows
-    properties:
-      - type: Documentation
-        url: https://developer.drip.com/
-      - type: Authentication
-        url: https://developer.drip.com/#authentication
+- aid: drip:drip-api
+  name: Drip REST API
+  description: >-
+    REST API for Drip exposing subscribers, tags, custom fields, broadcasts, email campaigns, events,
+    conversions, workflows, shopper activity (orders, carts, products), purchases, and webhooks. Supports
+    both API token Basic authentication for private integrations and OAuth 2.0 for public apps, with a
+    rate limit of 3,600 requests per hour.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Email Marketing
+  - Marketing Automation
+  - Subscribers
+  - Campaigns
+  - Workflows
+  properties:
+  - type: Documentation
+    url: https://developer.drip.com/
+  - type: Authentication
+    url: https://developer.drip.com/#authentication
+- aid: drip:drip-accounts-api
+  name: Drip Accounts API
+  description: The Accounts API from Drip — 2 operation(s) for accounts.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-accounts-api-openapi.yml
+- aid: drip:drip-broadcasts-api
+  name: Drip Broadcasts API
+  description: The Broadcasts API from Drip — 2 operation(s) for broadcasts.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Broadcasts
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-broadcasts-api-openapi.yml
+- aid: drip:drip-campaigns-api
+  name: Drip Campaigns API
+  description: The Campaigns API from Drip — 5 operation(s) for campaigns.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-campaigns-api-openapi.yml
+- aid: drip:drip-conversions-api
+  name: Drip Conversions API
+  description: The Conversions API from Drip — 1 operation(s) for conversions.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Conversions
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-conversions-api-openapi.yml
+- aid: drip:drip-custom-fields-api
+  name: Drip Custom Fields API
+  description: The Custom Fields API from Drip — 1 operation(s) for custom fields.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Custom Fields
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-custom-fields-api-openapi.yml
+- aid: drip:drip-events-api
+  name: Drip Events API
+  description: The Events API from Drip — 3 operation(s) for events.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-events-api-openapi.yml
+- aid: drip:drip-forms-api
+  name: Drip Forms API
+  description: The Forms API from Drip — 1 operation(s) for forms.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Forms
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-forms-api-openapi.yml
+- aid: drip:drip-orders-api
+  name: Drip Orders API
+  description: The Orders API from Drip — 1 operation(s) for orders.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-orders-api-openapi.yml
+- aid: drip:drip-shopper-activity-api
+  name: Drip Shopper Activity API
+  description: The Shopper Activity API from Drip — 3 operation(s) for shopper activity.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Shopper Activity
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-shopper-activity-api-openapi.yml
+- aid: drip:drip-subscribers-api
+  name: Drip Subscribers API
+  description: The Subscribers API from Drip — 2 operation(s) for subscribers.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/v2
+  tags:
+  - Subscribers
+  properties:
+  - type: OpenAPI
+    url: openapi/drip-subscribers-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/drip-agentic-access.yml
