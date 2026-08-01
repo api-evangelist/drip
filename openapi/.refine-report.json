@@ -1,0 +1,32 @@
+{
+  "provider": "drip",
+  "sources": [
+    "drip-accounts-api-openapi.yml",
+    "drip-broadcasts-api-openapi.yml",
+    "drip-campaigns-api-openapi.yml",
+    "drip-conversions-api-openapi.yml",
+    "drip-custom-fields-api-openapi.yml",
+    "drip-events-api-openapi.yml",
+    "drip-forms-api-openapi.yml",
+    "drip-orders-api-openapi.yml",
+    "drip-shopper-activity-api-openapi.yml",
+    "drip-subscribers-api-openapi.yml"
+  ],
+  "outputs": [
+    "drip-accounts-api-openapi.yml",
+    "drip-broadcasts-api-openapi.yml",
+    "drip-campaigns-api-openapi.yml",
+    "drip-conversions-api-openapi.yml",
+    "drip-custom-fields-api-openapi.yml",
+    "drip-events-api-openapi.yml",
+    "drip-forms-api-openapi.yml",
+    "drip-orders-api-openapi.yml",
+    "drip-shopper-activity-api-openapi.yml",
+    "drip-subscribers-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
