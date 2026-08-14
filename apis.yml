@@ -31,8 +31,13 @@ tags:
 url: >-
   https://raw.githubusercontent.com/api-evangelist/drip/refs/heads/main/apis.yml
 created: '2026-05-11'
-modified: '2026-05-11'
+modified: '2026-08-13'
 specificationVersion: '0.19'
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 34
+  pass: local-v1
 apis:
 - aid: drip:drip-api
   name: Drip REST API
@@ -64,6 +69,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-accounts-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-accounts-overlay.yaml
 - aid: drip:drip-broadcasts-api
   name: Drip Broadcasts API
   description: The Broadcasts API from Drip — 2 operation(s) for broadcasts.
@@ -74,6 +81,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-broadcasts-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-broadcasts-overlay.yaml
 - aid: drip:drip-campaigns-api
   name: Drip Campaigns API
   description: The Campaigns API from Drip — 5 operation(s) for campaigns.
@@ -84,6 +93,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-campaigns-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-campaigns-overlay.yaml
 - aid: drip:drip-conversions-api
   name: Drip Conversions API
   description: The Conversions API from Drip — 1 operation(s) for conversions.
@@ -94,6 +105,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-conversions-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-conversions-overlay.yaml
 - aid: drip:drip-custom-fields-api
   name: Drip Custom Fields API
   description: The Custom Fields API from Drip — 1 operation(s) for custom fields.
@@ -104,6 +117,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-custom-fields-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-custom-fields-overlay.yaml
 - aid: drip:drip-events-api
   name: Drip Events API
   description: The Events API from Drip — 3 operation(s) for events.
@@ -114,6 +129,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-events-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-events-overlay.yaml
 - aid: drip:drip-forms-api
   name: Drip Forms API
   description: The Forms API from Drip — 1 operation(s) for forms.
@@ -124,6 +141,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-forms-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-forms-overlay.yaml
 - aid: drip:drip-orders-api
   name: Drip Orders API
   description: The Orders API from Drip — 1 operation(s) for orders.
@@ -134,6 +153,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-orders-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-orders-overlay.yaml
 - aid: drip:drip-shopper-activity-api
   name: Drip Shopper Activity API
   description: The Shopper Activity API from Drip — 3 operation(s) for shopper activity.
@@ -144,6 +165,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-shopper-activity-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-shopper-activity-overlay.yaml
 - aid: drip:drip-subscribers-api
   name: Drip Subscribers API
   description: The Subscribers API from Drip — 2 operation(s) for subscribers.
@@ -154,6 +177,33 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drip-subscribers-api-openapi.yml
+  - type: Overlay
+    url: overlays/drip-subscribers-overlay.yaml
+- aid: drip:drip-mcp
+  name: Drip MCP Server
+  description: >-
+    Drip operates a remote Model Context Protocol server at
+    https://api.getdrip.com/mcp, protected by its OAuth 2.0 authorization server
+    and discoverable through RFC 9728 protected-resource metadata. Probed live
+    2026-08-13: the endpoint answers JSON-RPC with a 401 and a
+    WWW-Authenticate Bearer challenge, so the tool inventory requires an
+    authenticated introspection pass. The server is not mentioned anywhere in
+    Drip's public API reference.
+  humanURL: https://developer.drip.com/
+  baseURL: https://api.getdrip.com/mcp
+  tags:
+  - MCP
+  - Agents
+  - Email Marketing
+  properties:
+  - type: MCPServer
+    url: mcp/drip-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/drip-tool-crosswalk.yml
+  - type: OAuthScopes
+    url: scopes/drip-scopes.yml
+  - type: WellKnown
+    url: well-known/drip-well-known.yml
 common:
   - type: AgenticAccess
     url: agentic-access/drip-agentic-access.yml
@@ -179,6 +229,54 @@ common:
     url: https://www.drip.com/learn
   - type: GitHubOrganization
     url: https://github.com/DripEmail
+  - type: DeveloperPortal
+    url: https://developer.drip.com/
+  - type: APIReference
+    url: https://developer.drip.com/
+  - type: GettingStarted
+    url: https://developer.drip.com/#introduction
+  - type: StatusPage
+    url: https://status.drip.com/
+  - type: TermsOfService
+    url: https://www.drip.com/terms
+  - type: PrivacyPolicy
+    url: https://www.drip.com/privacy
+  - type: Packages
+    url: packages/drip-packages.yml
+  - type: SDKs
+    url: packages/drip-packages.yml
+  - type: WellKnown
+    url: well-known/drip-well-known.yml
+  - type: SecurityTxt
+    url: well-known/drip-security.txt
+  - type: Security
+    url: security/drip-vulnerability-disclosure.yml
+  - type: VulnerabilityDisclosure
+    url: security/drip-vulnerability-disclosure.yml
+  - type: OAuthScopes
+    url: scopes/drip-scopes.yml
+  - type: Conventions
+    url: conventions/drip-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drip-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/drip-lifecycle.yml
+  - type: Conformance
+    url: conformance/drip-conformance.yml
+  - type: DataModel
+    url: data-model/drip-data-model.yml
+  - type: Components
+    url: components/drip-components.yml
+  - type: Webhooks
+    url: asyncapi/drip-webhooks.yml
+  - type: RateLimits
+    url: rate-limits/drip-rate-limits.yml
+  - type: Plans
+    url: plans/drip-plans-pricing.yml
+  - type: LLMsTxt
+    url: llms/drip-llms.txt
+  - type: AgentSkill
+    url: skills/_index.yml
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
