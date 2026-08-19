@@ -1,0 +1,56 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  https://api.getdrip.com/.well-known/oauth-authorization-server (HTTP 200,
+  RFC 8414 authorization server metadata, probed 2026-08-13), corroborated by
+  the OAuth section of https://developer.drip.com/#oauth which shows a token
+  response carrying "scope": "public".
+docs: https://developer.drip.com/#oauth
+description: >-
+  Drip's OAuth 2.0 authorization server advertises exactly two scopes. This is
+  a coarse-grained model: `public` is the read-oriented default issued to
+  registered applications, and `write` is the mutating grant. There is no
+  per-resource scope (no separate subscribers/campaigns/workflows scopes), so
+  an agent granted `write` can mutate every resource the account exposes. The
+  API reference does not publish a scopes table of its own; these values come
+  from the machine-readable metadata document, which is the authoritative
+  source.
+  Derived baseline was NOT available from the OpenAPI: the specs in openapi/
+  declare only HTTP basic and bearer securitySchemes, no oauth2 scheme, so
+  derive-oauth-scopes.py found nothing to derive. Everything here is probed.
+authorization_server:
+  issuer: https://api.getdrip.com
+  metadata: well-known/drip-oauth-authorization-server.json
+  authorization_endpoint: https://www.getdrip.com/oauth/authorize
+  token_endpoint: https://www.getdrip.com/oauth/token
+  registration_endpoint: https://api.getdrip.com/oauth/register
+  grant_types_supported: [authorization_code, refresh_token]
+  response_types_supported: [code]
+  code_challenge_methods_supported: [S256]
+  token_endpoint_auth_methods_supported: [none, client_secret_basic, client_secret_post]
+scopes:
+  - name: public
+    description: >-
+      Default scope returned in the OAuth token response documented at
+      https://developer.drip.com/#oauth. Grants an application access to the
+      authorized Drip account through the REST API.
+    source: /.well-known/oauth-authorization-server (scopes_supported)
+  - name: write
+    description: >-
+      Mutating access. Not broken down per resource — a single grant covering
+      every writable endpoint on the account.
+    source: /.well-known/oauth-authorization-server (scopes_supported)
+scope_count: 2
+notes:
+  - >-
+    Drip's docs state that OAuth access tokens do not expire ("You should only
+    have to do this once, as tokens do not expire"), while the metadata
+    advertises refresh_token support. Long-lived non-expiring bearer tokens with
+    only two coarse scopes is the security posture an integrator should plan
+    around.
+  - >-
+    The authorization code from /oauth/authorize expires in 10 minutes per the
+    docs.
+  - >-
+    The same authorization server governs the MCP endpoint at
+    https://api.getdrip.com/mcp — see mcp/drip-mcp.yml.

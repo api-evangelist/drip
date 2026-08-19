@@ -1,0 +1,158 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip REST Accounts Campaigns API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List email series campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getdrip.com/v2/:account_id/campaigns",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List email series campaigns"
+        },
+        {
+          "info": {
+            "name": "Fetch an email series campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getdrip.com/v2/:account_id/campaigns/:campaign_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Fetch an email series campaign"
+        },
+        {
+          "info": {
+            "name": "Activate an email series campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v2/:account_id/campaigns/:campaign_id/activate",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Activate an email series campaign"
+        },
+        {
+          "info": {
+            "name": "Pause an email series campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v2/:account_id/campaigns/:campaign_id/pause",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Pause an email series campaign"
+        },
+        {
+          "info": {
+            "name": "List subscribers of a campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getdrip.com/v2/:account_id/campaigns/:campaign_id/subscribers",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List subscribers of a campaign"
+        },
+        {
+          "info": {
+            "name": "Subscribe someone to a campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v2/:account_id/campaigns/:campaign_id/subscribers",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Subscribe someone to a campaign"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

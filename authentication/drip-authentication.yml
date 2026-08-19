@@ -1,19 +1,87 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/drip-openapi.yml
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.drip.com/#authentication and
+  https://developer.drip.com/#oauth (read 2026-08-13), plus
+  https://api.getdrip.com/.well-known/oauth-authorization-server (HTTP 200).
+  Upgraded from the 2026-07-11 derived profile, which read only the two HTTP
+  schemes declared in openapi/drip-openapi.yml.
+docs: https://developer.drip.com/#authentication
+description: >-
+  Drip authenticates the REST API two ways. Private integrations use the
+  account's personal API token as the username half of HTTP Basic with an empty
+  password (note the trailing colon). Public integrations use OAuth 2.0
+  authorization code, with the resulting bearer token in the Authorization
+  header. Drip additionally asks every caller to send an identifying User-Agent
+  of the form `Your App Name (www.yourapp.com)`, and the API requires a client
+  that supports SNI.
 summary:
   types:
-  - http
+    - http
+    - oauth2
 schemes:
-- name: basicAuth
-  type: http
-  scheme: basic
-  description: API token used as username with empty password
-  sources:
-  - openapi/drip-openapi.yml
-- name: bearerAuth
-  type: http
-  scheme: bearer
-  bearerFormat: OAuth2 access token
-  sources:
-  - openapi/drip-openapi.yml
+  - name: basicAuth
+    type: http
+    scheme: basic
+    description: >-
+      Personal API Token as the Basic username with an empty password
+      (`-u 'YOUR_API_KEY:'`). Intended for private, single-account
+      integrations. Token is found in the Drip account settings.
+    docs: https://developer.drip.com/#authentication
+    sources:
+      - openapi/drip-openapi.yml
+      - https://developer.drip.com/#authentication
+  - name: bearerAuth
+    type: http
+    scheme: bearer
+    bearerFormat: OAuth2 access token
+    description: >-
+      `Authorization: Bearer <access_token>` using a token issued by the Drip
+      OAuth 2.0 authorization server. Intended for public integrations acting
+      on behalf of other people's Drip accounts.
+    docs: https://developer.drip.com/#oauth
+    sources:
+      - openapi/drip-openapi.yml
+      - https://developer.drip.com/#oauth
+  - name: oauth2
+    type: oauth2
+    flow: authorizationCode
+    authorizationUrl: https://www.getdrip.com/oauth/authorize
+    tokenUrl: https://www.getdrip.com/oauth/token
+    registrationUrl: https://api.getdrip.com/oauth/register
+    scopes:
+      public: Default scope returned in the token response.
+      write: Mutating access across the account.
+    pkce: S256
+    dynamic_client_registration: true
+    description: >-
+      Authorization code flow. Applications are registered with Drip to obtain
+      a client id and secret and must supply a valid callback URL before they
+      can be activated. The verification code expires in 10 minutes. Drip's
+      docs state access tokens do not expire, though the authorization server
+      metadata advertises refresh_token support.
+    docs: https://developer.drip.com/#oauth
+    detail: scopes/drip-scopes.yml
+    sources:
+      - https://developer.drip.com/#oauth
+      - well-known/drip-oauth-authorization-server.json
+conventions:
+  required_headers:
+    - name: User-Agent
+      required: recommended
+      format: Your App Name (www.yourapp.com)
+      note: Present in every curl example in the reference.
+    - name: Content-Type
+      required: true
+      value: application/json
+      note: >-
+        Parameters must be serialized as JSON in the request body — not in the
+        query string and not as form parameters.
+  transport: HTTPS only, SNI required
+  unauthenticated_response: 401 Unauthorized with an errors[] envelope
+  insufficient_permissions_response: 403 Forbidden, code authorization_error
+mcp:
+  note: >-
+    The MCP endpoint at https://api.getdrip.com/mcp is protected by the same
+    OAuth authorization server and advertises RFC 9728 protected-resource
+    metadata. See mcp/drip-mcp.yml.

@@ -1,0 +1,134 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.drip.com/#js-api (Getting Started, Installing Your
+  JavaScript Snippet, Identifying Visitors, Tracking Events, Handling Forms)
+  and https://developer.drip.com/#custom-dynamic-content. Read 2026-08-13.
+description: >-
+  Drip's client-side and embeddable surface, which is distinct from the server
+  SDKs in packages/. There are three pieces: a per-account JavaScript tag that
+  installs a global command queue, a hosted form widget the tag can show and
+  hide, and Custom Dynamic Content — an inversion where Drip calls the
+  customer's HTTP endpoint at email render time and exposes the JSON it gets
+  back to Liquid. The last one is unusual enough to be worth calling out: it
+  makes the integrator the API provider and Drip the client.
+
+families:
+  - name: JavaScript tag (JS API)
+    type: script-tag
+    loader: '//tag.getdrip.com/<account_id>.js'
+    docs: https://developer.drip.com/#js-api
+    versioned: false
+    version_note: >-
+      The script URL carries the account id, not a version. Consumers cannot
+      pin a build. See packages/drip-packages.yml (registry: cdn).
+    install: |
+      <script type="text/javascript">
+        var _dcq = _dcq || [];
+        var _dcs = _dcs || {};
+        _dcs.account = 'YOUR_ACCOUNT_ID';
+        (function() {
+          var dc = document.createElement('script');
+          dc.type = 'text/javascript'; dc.async = true;
+          dc.src = '//tag.getdrip.com/YOUR_ACCOUNT_ID.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(dc, s);
+        })();
+      </script>
+    config:
+      _dcs.account: The Drip account id. Found under Settings → Account → Site Setup.
+      _dcs.cookiePath: Optional. Limits the tracking cookie to a path prefix.
+    call_convention: '_dcq.push(["methodName", { key: "value" }]);'
+    capabilities:
+      - Identify a visitor and attach identifying data to them.
+      - Track events and conversions for subscribers.
+      - Track product views.
+      - Subscribe a person to an Email Series Campaign / unsubscribe them.
+      - Tag a visitor via query string.
+      - Open and close the native Drip form widget.
+    methods:
+      - name: identify
+        description: >-
+          Identify the current visitor and attach data (email, custom fields,
+          tags) to the subscriber record.
+      - name: showForm
+        description: Open the native Drip form widget.
+      - name: hideForm
+        description: Close the native Drip form widget.
+    note: >-
+      The reference documents the `_dcq.push` command-queue convention and
+      names identify, showForm and hideForm explicitly. Other tracking calls
+      are described in prose per use case rather than as a named method list,
+      so only the named methods are recorded here.
+
+  - name: Drip form widget
+    type: hosted-embed
+    docs: https://developer.drip.com/#handling-forms
+    description: >-
+      Drip's native, account-configured form. Rendered by the JavaScript tag,
+      controlled programmatically with showForm/hideForm, and emitting form
+      submission events the host page can listen for.
+    events:
+      - Form submission events (documented under Handling Forms).
+    related_api: GET /v2/{account_id}/forms — list the forms defined on the account.
+
+  - name: Custom Dynamic Content
+    type: inverted-integration
+    docs: https://developer.drip.com/#custom-dynamic-content
+    description: >-
+      The integrator publishes an HTTP GET endpoint; Drip fetches JSON from it
+      while rendering an email and exposes the document to Liquid under a
+      chosen `my.` shortcode. Drip is the client here, not the server.
+    contract:
+      method: GET only
+      auth: >-
+        No auth scheme beyond whatever is embedded in the base URL's path or
+        query string (e.g. ?token=... or /a7c43be/). Drip appends its
+        parameters to whatever the integrator's URL already carries.
+      parameters: >-
+        Scoped and named for the entity — a subscriber custom field
+        `first_name` arrives as subscriber[first_name]; an event property
+        arrives as event[product_id]. The event scope is valid only inside a
+        Workflow. Fields must be nominated in advance because everything goes
+        in the query string, which HTTP servers length-limit.
+      empty_parameters: 'Sent as a bare key with no value, e.g. ?subscriber[country]=US&subscriber[zip]'
+      cacheability_rule: >-
+        Values must not be unique per subscriber (Drip will not send `email`),
+        so responses stay cacheable and delivery throughput stays high.
+      response_content_type: application/json (required)
+      response_body: A parseable JSON document whose top level is an object or an array.
+      max_response_size: 350 KB
+      timeout: 3 seconds for the response or the whole redirect chain
+      status_handling:
+        2xx: Success. Missing keys resolve to nil in Liquid.
+        3xx: Followed as redirects per the HTTP spec.
+        4xx: Permanent error — the email is not sent.
+        429: >-
+          Special-cased. Signals Drip to retry later with exponential backoff —
+          the documented way to say "warm my cache and come back".
+        5xx: Temporary error — retried for a limited time, then the individual email is given up on.
+      preview_mode:
+        parameter: preview=true
+        description: >-
+          Appended when previewing or sending a test email. Drip recommends the
+          endpoint return mocked data, because in preview there is no Event and
+          usually no Person. "Preview As" supplies real subscriber values plus
+          preview=true.
+    reference_implementation:
+      name: Drip Weather
+      url: https://github.com/DripEmail/custom-dynamic-weather
+      language: Go
+      archived: true
+      note: >-
+        The example endpoint the docs link to. The repo is archived on GitHub
+        as of 2025-12, so the worked example is no longer maintained.
+
+not_found:
+  - name: Web component / element library
+    note: >-
+      Drip publishes no npm-distributed UI element library. The org does contain
+      much-select-elm, a generic Elm select input wrapped as a web component,
+      but it is internal tooling and not part of any documented Drip embed
+      surface, so it is not listed as a component.
+  - name: Embedded dashboard / analytics embed
+    note: No hosted, embeddable Drip dashboard is documented.

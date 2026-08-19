@@ -1,0 +1,103 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Live probes of every /.well-known/ path against each host named in apis.yml
+  (baseURL https://api.getdrip.com/v2) and in the OpenAPI servers[]
+  (https://api.getdrip.com), plus the docs host developer.drip.com and the
+  application host www.getdrip.com. Status is the HTTP code observed at fetch
+  time on 2026-08-13.
+description: >-
+  Drip serves a real /.well-known/ discovery surface on its API and application
+  hosts. Three documents returned genuine payloads: a PGP-signed security.txt,
+  an OAuth 2.0 authorization server metadata document (RFC 8414), and an OAuth
+  protected resource metadata document (RFC 9728) whose `resource` names an MCP
+  endpoint at https://api.getdrip.com/mcp. The marketing host www.drip.com sits
+  behind a Cloudflare bot challenge and answered 403 (cf-mitigated: challenge)
+  on every path, so no conclusion is recorded for it.
+hosts:
+  - host: https://api.getdrip.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        type: text/plain
+        file: drip-security.txt
+        note: PGP-signed. Canonical points at https://www.getdrip.com/.well-known/security.txt
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        type: application/json
+        file: drip-oauth-authorization-server.json
+        note: RFC 8414 metadata; issuer https://api.getdrip.com, scopes public + write
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        type: application/json
+        file: drip-oauth-protected-resource.json
+        note: RFC 9728 metadata; resource https://api.getdrip.com/mcp
+      - path: /.well-known/oauth-protected-resource/mcp
+        status: 200
+        type: application/json
+        note: Same body as the root protected-resource document; referenced by the WWW-Authenticate challenge on the MCP endpoint.
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://www.getdrip.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        type: text/plain
+        note: Canonical copy; byte-identical to the api.getdrip.com response, saved once as drip-security.txt
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        type: application/json
+        note: Same metadata with issuer https://www.getdrip.com
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        type: application/json
+        note: resource https://www.getdrip.com/mcp
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://developer.drip.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://www.drip.com
+    unreadable: true
+    note: >-
+      Every path returned HTTP 403 with `cf-mitigated: challenge` and a
+      Cloudflare interstitial body. That is a bot challenge, not a document and
+      not an absence, so nothing is claimed for this host.
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+      - path: /.well-known/agent-card.json
+        status: 403
+      - path: /llms.txt
+        status: 403
+      - path: /robots.txt
+        status: 403

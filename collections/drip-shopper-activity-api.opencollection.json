@@ -1,0 +1,79 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip REST Accounts Shopper Activity API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Shopper Activity",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Batch create or update carts (v3 shopper activity)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v3/:account_id/shopper_activity/cart/batch",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Batch create or update carts (v3 shopper activity)"
+        },
+        {
+          "info": {
+            "name": "Batch create or update orders (v3 shopper activity)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v3/:account_id/shopper_activity/order/batch",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Batch create or update orders (v3 shopper activity)"
+        },
+        {
+          "info": {
+            "name": "Batch create or update products (v3 shopper activity)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v3/:account_id/shopper_activity/product/batch",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Batch create or update products (v3 shopper activity)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

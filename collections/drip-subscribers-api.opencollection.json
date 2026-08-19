@@ -1,0 +1,61 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip REST Accounts Subscribers API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Subscribers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Batch create or update subscribers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v2/:account_id/subscribers/batches",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Batch create or update subscribers"
+        },
+        {
+          "info": {
+            "name": "Batch unsubscribe people",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v2/:account_id/unsubscribes/batches",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Batch unsubscribe people"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

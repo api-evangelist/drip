@@ -1,0 +1,133 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.drip.com/#rate-limiting
+docs: https://developer.drip.com/#rate-limiting
+description: >-
+  Drip publishes its rate limits in the API reference and returns them at
+  runtime. The standard limit is 3,600 requests per hour; batch endpoints are
+  capped much lower at 50 requests per hour but carry up to 1,000 records each,
+  which is how Drip expects high-volume imports to be done. Two endpoints
+  carry their own separate, tighter limits. Two different 429 envelopes are in
+  use — the global limiter returns a bare {"message", "documentation"} object,
+  while the newer per-endpoint limiters return the standard errors[] envelope
+  and a Retry-After header.
+provider: Drip
+providerId: drip
+base_url: https://api.getdrip.com
+
+headers:
+  request:
+    - name: User-Agent
+      note: Drip asks that every request identify the calling application.
+  response:
+    - name: X-RateLimit-Limit
+      example: '3600'
+      note: The ceiling for the current window. Returned on all rate-limited requests.
+    - name: X-RateLimit-Remaining
+      example: '3597'
+      note: Requests left in the current window.
+    - name: Retry-After
+      note: >-
+        Returned on 429 by the per-endpoint limiters (send test email, email
+        metrics), indicating when the limit resets. NOT documented for the
+        global 3,600/hour limiter.
+  standard: false
+  standard_note: >-
+    Drip uses the legacy X-RateLimit-* form, not the RFC 9331 RateLimit /
+    RateLimit-Policy headers. There is no X-RateLimit-Reset — a client on the
+    global limiter learns only the ceiling and the remainder, and must infer
+    the window from the documented "try again in an hour" message.
+
+response_codes:
+  throttled: 429
+
+limits:
+  - name: Standard REST API requests
+    scope: account
+    metric: requests_per_hour
+    limit: 3600
+    window: hour
+    burst: null
+    applies_to: All REST API endpoints other than the batch endpoints.
+    exhausted:
+      status: 429
+      body: >-
+        {"message": "API rate limit exceeded. Please try again in an hour.",
+        "documentation": "https://www.getdrip.com/docs/rest-api#rate-limting"}
+    source: https://developer.drip.com/#rate-limiting
+  - name: Batch API requests
+    scope: account
+    metric: requests_per_hour
+    limit: 50
+    window: hour
+    payload_limit: 1000 records per request
+    effective_throughput: 50,000 record updates per hour
+    applies_to: >-
+      /v2/{account_id}/subscribers/batches,
+      /v2/{account_id}/unsubscribes/batches,
+      /v2/{account_id}/events/batches,
+      /v2/{account_id}/orders/batches and the v3 shopper activity batch
+      endpoints for carts, orders and products.
+    exhausted:
+      status: 429
+    source: https://developer.drip.com/#rate-limiting
+  - name: Send a test email — per request
+    scope: request
+    metric: recipients_per_request
+    limit: 5
+    window: request
+    applies_to: POST /v2/{account_id}/broadcasts/{broadcast_id}/send_test
+    source: https://developer.drip.com/#send-a-test-email
+  - name: Send a test email — hourly
+    scope: user
+    metric: requests_per_hour
+    limit: 20
+    window: hour
+    applies_to: POST /v2/{account_id}/broadcasts/{broadcast_id}/send_test
+    exhausted:
+      status: 429
+      header: Retry-After
+      code: rate_limit_error
+      message: Hourly test email limit exceeded. Maximum 20 requests per hour.
+    source: https://developer.drip.com/#send-a-test-email
+  - name: Send a test email — daily
+    scope: user
+    metric: requests_per_day
+    limit: 40
+    window: day
+    applies_to: POST /v2/{account_id}/broadcasts/{broadcast_id}/send_test
+    source: https://developer.drip.com/#send-a-test-email
+  - name: Email metrics report
+    scope: account
+    metric: requests_per_hour
+    limit: 20
+    window: hour
+    applies_to: GET /v2/{account_id}/metrics/email
+    note: >-
+      Explicitly "its own rate limit, separate from the standard API rate
+      limit". The same endpoint also enforces argument limits — a 366-day
+      maximum date range, 25 workflow_ids per request, and 1,000 resolved
+      emails — rejected with 400 bad_request rather than 429.
+    exhausted:
+      status: 429
+      header: Retry-After
+      code: rate_limit_exceeded
+      message: 'Rate limit exceeded: at most 20 requests per account per hour.'
+    source: https://developer.drip.com/#fetch-email-metrics
+
+pagination_interaction:
+  note: >-
+    Collection endpoints return a maximum of 100 items per page, so a full
+    subscriber export of N subscribers costs ceil(N/100) requests against the
+    3,600/hour budget.
+
+webhook_delivery:
+  note: >-
+    Drip also rate-limits in the other direction. If a customer's webhook
+    endpoint rate-limits Drip, Drip retries for up to 3 days; any other error
+    sustained for 3 days temporarily disables the webhook. Custom Dynamic
+    Content endpoints get a 3-second timeout and may return 429 to ask Drip to
+    retry with exponential backoff.
+  source: https://developer.drip.com/#webhook-events
+
+limit_count: 6

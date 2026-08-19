@@ -1,0 +1,156 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.drip.com/ — the Introduction, Authentication, OAuth, Rate
+  Limiting, Batch API, Pagination and Errors sections, which describe behaviour
+  that applies across every endpoint rather than to any single one. Read
+  2026-08-13.
+description: >-
+  How the Drip REST API behaves across every operation: authentication style,
+  request/response media types, pagination, batching, error envelope, rate-limit
+  signalling, versioning and hypermedia links. These are the runtime semantics
+  the OpenAPI in openapi/ does not express.
+
+base_url: https://api.getdrip.com
+api_style: >-
+  REST over HTTPS. JSON request bodies and JSON responses. Parameters are
+  serialized in the body, never in the query string or as form parameters,
+  except for GET collection filters. The API requires a client that supports
+  SNI.
+
+authentication:
+  scheme: >-
+    HTTP Basic (API token as username, empty password) for private
+    integrations, or OAuth 2.0 Bearer for public integrations.
+  key_types:
+    - Personal API Token (Basic)
+    - OAuth 2.0 access token (Bearer)
+  docs: https://developer.drip.com/#authentication
+  detail: authentication/drip-authentication.yml
+  user_agent_expected: 'Your App Name (www.yourapp.com)'
+
+idempotency:
+  supported: false
+  mechanism: null
+  note: >-
+    Drip publishes no idempotency key header and no replay semantics. What it
+    offers instead is upsert-shaped writes: the create-or-update endpoints for
+    subscribers, orders, carts and products are keyed on a natural identifier
+    (email address, provider order id, product id), so replaying the same
+    payload converges rather than duplicating. That is a weaker guarantee than
+    an idempotency key — it does not protect a POST /events record from being
+    double-counted on a retry, and there is no way for a client to detect a
+    replayed response. Recorded as an honest absence, not an omission.
+  docs: null
+
+pagination:
+  style: page-number
+  request_params:
+    page: 1-based page number; defaults to page 1
+  page_size:
+    default: 100
+    max: 100
+    note: >-
+      Fixed at "a maximum of 100 items, unless otherwise noted"; there is no
+      per_page/limit parameter documented on the general pagination page.
+  response_fields:
+    meta.page: current page number
+    meta.count: items on this page
+    meta.total_pages: total pages in the collection
+    meta.total_count: total items in the collection
+  cursor_support: false
+  note: >-
+    Only "some endpoints that return collections are paginated"; the email
+    metrics report is explicitly not paginated. Page-number pagination over a
+    mutating collection can skip or repeat records between pages.
+  docs: https://developer.drip.com/#pagination
+
+batching:
+  supported: true
+  mechanism: >-
+    Dedicated /batches endpoints that accept a `batches` array, each element
+    carrying up to 1,000 records.
+  endpoints:
+    - POST /v2/{account_id}/subscribers/batches
+    - POST /v2/{account_id}/unsubscribes/batches
+    - POST /v2/{account_id}/events/batches
+    - POST /v2/{account_id}/orders/batches
+    - POST /v3/{account_id}/shopper_activity/cart/batch
+    - POST /v3/{account_id}/shopper_activity/order/batch
+    - POST /v3/{account_id}/shopper_activity/product/batch
+  rationale: >-
+    Drip positions batching as the answer to the 3,600/hour ceiling: 50 batch
+    requests per hour x 1,000 records = 50,000 updates per hour.
+  docs: https://developer.drip.com/#batch-api
+  detail: rate-limits/drip-rate-limits.yml
+
+field_expansion:
+  supported: false
+  note: >-
+    No expand[] or fields[] mechanism. Related resources are surfaced as
+    hypermedia links instead (see hypermedia below).
+
+hypermedia:
+  supported: true
+  mechanism: >-
+    Every resource carries an `href` self link, and collection responses carry
+    a top-level `links` object with URI templates for related collections
+    (e.g. "accounts.broadcasts": "https://api.getdrip.com/v2/{accounts.id}/broadcasts").
+  note: >-
+    A genuinely useful affordance for agents — the response tells a client
+    where the related collections live without hard-coding path templates.
+
+metadata:
+  supported: true
+  mechanism: >-
+    Arbitrary per-subscriber custom fields (`custom_fields` object) and tags
+    (`tags` array). Custom field identifiers in use on an account are
+    enumerable via GET /v2/{account_id}/custom_field_identifiers.
+
+request_tracing:
+  supported: partial
+  note: >-
+    Drip's own edge returns X-Request-Id and X-Amzn-RequestId on responses
+    (observed on live probes of api.getdrip.com), but the API reference does
+    not document a request id or tell integrators to quote one in support
+    tickets.
+
+versioning:
+  scheme: URI path
+  current: v2
+  additional: >-
+    v3 is used for the Shopper Activity endpoints
+    (/v3/{account_id}/shopper_activity/...). Webhooks carry their own
+    independent `version` field on the webhook resource; the docs state "the
+    current stable version is 2".
+  header_negotiation: false
+  detail: lifecycle/drip-lifecycle.yml
+
+error_envelope:
+  shape: >-
+    {"errors": [{"code": "...", "attribute": "...", "message": "..."}]}
+  rfc9457: false
+  content_type: application/json
+  note: >-
+    An errors ARRAY, not RFC 9457 problem+json. `attribute` is present only on
+    validation errors. One exception: the global rate limiter returns a flat
+    {"message", "documentation"} object with no errors[] array at all, so a
+    client must handle two shapes.
+  detail: errors/drip-problem-types.yml
+  docs: https://developer.drip.com/#errors
+
+rate_limit_signaling:
+  headers: [X-RateLimit-Limit, X-RateLimit-Remaining, Retry-After]
+  reset_header: false
+  standard: legacy X-RateLimit-* (not RFC 9331)
+  status: 429
+  detail: rate-limits/drip-rate-limits.yml
+
+webhooks:
+  supported: true
+  detail: asyncapi/drip-webhooks.yml
+  docs: https://developer.drip.com/#webhooks
+
+timestamps:
+  format: ISO-8601 UTC (e.g. 2013-06-21T10:31:58Z)
+  field: occurred_at on webhook events, created_at on resources

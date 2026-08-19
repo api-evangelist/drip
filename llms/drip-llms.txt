@@ -1,0 +1,110 @@
+# Drip
+
+> Drip is an email marketing and marketing automation platform for ecommerce brands. Its REST API exposes subscribers, tags, custom fields, single-email campaigns (broadcasts), email series campaigns, workflows, events, conversions, forms, orders, shopper activity, email metrics and webhooks over HTTPS with JSON. Drip also operates an OAuth-protected remote MCP server.
+
+<!--
+generated: '2026-08-13'
+method: generated
+source: >-
+  Composed by API Evangelist from https://developer.drip.com/ and the artifacts
+  in this repository. Drip does NOT publish an llms.txt of its own:
+  https://developer.drip.com/llms.txt returns 404 and https://www.drip.com/llms.txt
+  returns 403 (Cloudflare bot challenge). This file is a faithful generation, not
+  a provider document.
+-->
+
+## Getting started
+
+- Base URL: `https://api.getdrip.com` — v2 for the core API, v3 for Shopper Activity.
+- API reference: https://developer.drip.com/
+- All requests are JSON over HTTPS. Parameters go in the request body, not the query string. A client supporting SNI is required.
+- Send an identifying `User-Agent` of the form `Your App Name (www.yourapp.com)`.
+
+## Authentication
+
+- Private integrations: HTTP Basic with the account API token as the username and an empty password (`-u 'YOUR_API_KEY:'`). https://developer.drip.com/#authentication
+- Public integrations: OAuth 2.0 authorization code. Authorize at https://www.getdrip.com/oauth/authorize, exchange at https://www.getdrip.com/oauth/token, then send `Authorization: Bearer <token>`. https://developer.drip.com/#oauth
+- Two scopes only: `public` and `write`. There is no per-resource scoping.
+- Dynamic client registration is available at https://api.getdrip.com/oauth/register and PKCE S256 is supported.
+- Authorization server metadata: https://api.getdrip.com/.well-known/oauth-authorization-server
+
+## MCP (Model Context Protocol)
+
+- Remote MCP endpoint: `https://api.getdrip.com/mcp` (also mirrored at `https://www.getdrip.com/mcp`).
+- Protected by the OAuth server above; RFC 9728 metadata at https://api.getdrip.com/.well-known/oauth-protected-resource
+- An unauthenticated `tools/list` returns 401. The tool inventory is not published in Drip's documentation — obtain a bearer token and introspect.
+
+## Rate limits
+
+- 3,600 requests per hour for standard endpoints.
+- 50 requests per hour for batch endpoints, each carrying up to 1,000 records (50,000 updates/hour).
+- Response headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`. Exhaustion returns 429.
+- Two endpoints have their own tighter limits and return `Retry-After`: send test email (20/hour, 40/day, 5 recipients per request) and email metrics (20/hour per account).
+- https://developer.drip.com/#rate-limiting
+
+## Conventions
+
+- Pagination: `page` query parameter, 100 items per page, `meta` object with `page`, `count`, `total_pages`, `total_count`.
+- Errors: `{"errors": [{"code", "attribute", "message"}]}`. Not RFC 9457. The global rate limiter is the exception and returns a flat `{"message", "documentation"}` object.
+- No idempotency key header. Subscriber, order, cart and product writes are upsert-shaped on a natural key instead.
+- Responses carry `href` self links and a top-level `links` object of URI templates for related collections.
+- Timestamps are ISO-8601 UTC.
+
+## Core resources
+
+- Accounts — `GET /v2/accounts`, `GET /v2/accounts/{account_id}`. The tenancy root; nearly every other path is `/v2/{account_id}/...`.
+- Subscribers — create or update, list, fetch, delete, unsubscribe, and the batch endpoints `POST /v2/{account_id}/subscribers/batches` and `POST /v2/{account_id}/unsubscribes/batches`. Keyed on email address.
+- Tags — list, apply to a subscriber, remove from a subscriber.
+- Custom fields — `GET /v2/{account_id}/custom_field_identifiers`.
+- Single-Email Campaigns (Broadcasts) — list, create, fetch, update, delete, and `POST /v2/{account_id}/broadcasts/{broadcast_id}/send_test`.
+- Email Series Campaigns — list, fetch, activate, pause, list subscribers, subscribe someone.
+- Workflows — list, fetch, activate, pause, start someone, remove someone, plus workflow triggers.
+- Events — `POST /v2/{account_id}/events`, `POST /v2/{account_id}/events/batches`, `GET /v2/{account_id}/event_actions`.
+- Conversions (Goals) — `GET /v2/{account_id}/goals`, fetch a conversion.
+- Forms — `GET /v2/{account_id}/forms`, fetch a form.
+- Orders (Legacy) — `POST /v2/{account_id}/orders`, refunds, order events. Superseded by Shopper Activity.
+- Shopper Activity (v3) — cart, order and product activity, each with a `/batch` endpoint.
+- Email metrics — `GET /v2/{account_id}/metrics/email`. Not paginated; its own 20/hour limit.
+- Webhooks — list, fetch, create, destroy.
+- Users — fetch the authenticated user.
+
+## Webhooks and events
+
+- 29 subscriber events, POSTed as JSON: `{"event", "data": {"account_id", "subscriber"}, "occurred_at"}`.
+- Lifecycle: created, deleted, reactivated, marked_as_deliverable/undeliverable, updated_email_address, updated_alias, updated_time_zone.
+- Marketing: subscribed_to_email_marketing, subscribed_to_campaign, removed_from_campaign, unsubscribed_from_campaign, unsubscribed_all, completed_campaign.
+- Engagement: received_email (opt-in, high volume), opened_email, clicked_email, bounced, complained, clicked_trigger_link, visited_page.
+- Data: applied_tag, removed_tag, updated_custom_field, updated_lifetime_value, updated_lead_score, became_lead, became_non_prospect, performed_custom_event.
+- Delivery: retried for up to 3 days when the receiver rate-limits; disabled after 3 days of other errors. No signature header — receivers cannot cryptographically verify Drip.
+- https://developer.drip.com/#webhook-events
+
+## Client-side surfaces
+
+- JavaScript tag: `//tag.getdrip.com/<account_id>.js`, command queue `_dcq.push(["identify", {...}])`, plus `showForm` / `hideForm` for the native form widget.
+- Custom Dynamic Content: Drip GETs JSON from an endpoint you host at email render time and exposes it to Liquid under a `my.` shortcode. JSON only, 350 KB maximum, 3-second timeout, `preview=true` on test sends, 429 to ask Drip to retry with backoff.
+- https://developer.drip.com/#js-api
+
+## Official client libraries
+
+- Ruby: `drip-ruby` — https://github.com/DripEmail/drip-ruby (3.5.0, 2026-08-11)
+- Node.js: `drip-nodejs` — https://github.com/DripEmail/drip-nodejs (3.1.4, 2025-03-13)
+- PHP: `dripemail/drip-php` — https://github.com/DripEmail/drip-php (v1.5.1, 2025-03-12)
+- .NET: `Leadpages.Drip.DripDotNet` — https://github.com/DripEmail/drip-dot-net (1.2.0, 2017-01-20; effectively abandoned)
+
+## Operations
+
+- Status page: https://status.drip.com/ (Atlassian Statuspage; `REST and JavaScript APIs` is a separately monitored component). JSON at https://status.drip.com/api/v2/summary.json, feeds at /history.atom and /history.rss.
+- Security contact: security@drip.com via https://api.getdrip.com/.well-known/security.txt
+- Support: https://help.drip.com/
+
+## Known gaps
+
+- Drip publishes no OpenAPI, no AsyncAPI, no llms.txt and no dated API changelog.
+- Versioning is by URI path with no deprecation policy, no Sunset/Deprecation headers and no removal dates for the Legacy Orders family or the deprecated campaign fields.
+- The MCP server is not mentioned anywhere in the public API reference; it is discoverable only from `/.well-known/`.
+- www.drip.com (marketing, pricing, help center) is behind a Cloudflare bot challenge and returns 403 to non-browser clients, so plan and pricing data could not be captured.
+
+## API Evangelist catalog
+
+- Profile: https://apis.io/drip
+- Repository: https://github.com/api-evangelist/drip

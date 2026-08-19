@@ -1,0 +1,266 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.drip.com/ — the per-resource "Properties" tables and the
+  top-level `links` objects the API returns, which are how Drip expresses
+  relationships. Read 2026-08-13. Cross-checked against the path parameters and
+  operationIds in openapi/*.yml.
+description: >-
+  The Drip entity graph. This is SEARCHED rather than derived because the
+  OpenAPI documents in openapi/ declare no components.schemas at all — there are
+  no $refs to walk. Drip does, however, publish the graph at runtime: every
+  resource carries an `href` self link and collection responses carry a `links`
+  object of URI templates (e.g. "accounts.campaigns":
+  "https://api.getdrip.com/v2/{accounts.id}/campaigns"), which is the
+  authoritative statement of what points at what.
+
+root: Account
+root_note: >-
+  Account is the tenancy root. Almost every path is
+  /v2/{account_id}/<resource>, so account_id is a required path parameter
+  rather than a body field, and cross-account traversal does not exist in the
+  API surface. The two exceptions are GET /v2/accounts and GET
+  /v2/accounts/{account_id} themselves.
+
+id_conventions:
+  account: Numeric string, e.g. "9999999".
+  subscriber: Opaque lowercase alphanumeric token, e.g. "z1togz2hcjrkpp5treip".
+  webhook: Numeric string, e.g. "77777".
+  self_link_field: href
+  note: >-
+    Drip does not use typed id prefixes (no cus_/sub_ style). Ids are only
+    meaningful in the context of their collection, which is why href matters.
+
+entities:
+  - name: Account
+    description: A Drip account — the tenancy boundary and the sending identity.
+    key_fields: [id, name, url, default_from_name, default_from_email, default_postal_address, primary_email, enable_third_party_cookies, phone_number, created_at, href]
+    operations: [listAccounts, getAccount]
+    relationships:
+      - has_many: Broadcast
+        via: links.accounts.broadcasts
+      - has_many: Campaign
+        via: links.accounts.campaigns
+      - has_many: Conversion
+        via: links.accounts.goals
+        note: Conversions are represented as "Goals" in the links object.
+      - has_many: Subscriber
+        via: path /v2/{account_id}/subscribers
+      - has_many: Webhook
+        via: path /v2/{account_id}/webhooks
+      - has_many: Workflow
+        via: path /v2/{account_id}/workflows
+      - has_many: Form
+        via: path /v2/{account_id}/forms
+      - has_many: CustomFieldIdentifier
+        via: path /v2/{account_id}/custom_field_identifiers
+      - has_many: Tag
+        via: path /v2/{account_id}/tags
+
+  - name: Subscriber
+    description: >-
+      A person. The hub of the model — nearly every other entity either
+      describes a subscriber, targets one, or reports an action one took.
+    key_fields: [id, status, email, custom_fields, tags, time_zone, utc_offset, created_at, ip_address, user_agent, lifetime_value, original_referrer, landing_url, prospect, base_lead_score, lead_score, user_id]
+    natural_key: email
+    natural_key_note: >-
+      Create-or-update semantics are keyed on the email address, which is what
+      makes subscriber writes convergent on retry. See
+      conventions/drip-conventions.yml (idempotency).
+    operations: [batchSubscribers, batchUnsubscribes, listCampaignSubscribers, subscribeToCampaign]
+    documented_not_in_spec:
+      - Create or update a subscriber
+      - List all subscribers
+      - Fetch a subscriber
+      - Remove a subscriber from one or all Email Series Campaigns
+      - Unsubscribe from all mailings
+      - Delete a subscriber
+    relationships:
+      - belongs_to: Account
+        via: account_id
+      - has_many: Tag
+        via: tags[] (denormalized onto the subscriber)
+      - has_many: CustomField
+        via: custom_fields{} (denormalized onto the subscriber)
+      - has_many: Event
+        via: subscriber events recorded at /v2/{account_id}/events
+      - has_many: CampaignSubscription
+        via: /v2/{account_id}/campaigns/{campaign_id}/subscribers
+
+  - name: Campaign
+    aka: Email Series Campaign
+    description: A multi-email drip sequence a subscriber can be subscribed to.
+    key_fields: [id, name, status, minutes_from_midnight, localize_sending_time, days_of_the_week_mask, start_immediately, double_optin, notify_subscribe_email, notify_unsubscribe_email, bcc, email_count, active_subscriber_count]
+    deprecated_fields: [send_to_confirmation_page, use_custom_confirmation_page, post_confirmation_url]
+    operations: [listCampaigns, getCampaign, activateCampaign, pauseCampaign, listCampaignSubscribers, subscribeToCampaign]
+    relationships:
+      - belongs_to: Account
+        via: path account_id
+      - has_many: Subscriber
+        via: /campaigns/{campaign_id}/subscribers
+    state_machine:
+      states: [active, paused]
+      transitions: [activateCampaign, pauseCampaign]
+      failure: 403 transition error (see errors/drip-problem-types.yml)
+
+  - name: Broadcast
+    aka: Single-Email Campaign
+    description: A one-off email send, as opposed to a series.
+    operations: [listBroadcasts, getBroadcast]
+    documented_not_in_spec:
+      - Create a Single-Email Campaign
+      - Update a Single-Email Campaign
+      - Delete a Single-Email Campaign
+      - Send a test email
+    relationships:
+      - belongs_to: Account
+        via: links.accounts.broadcasts
+      - has_one: EmailContent
+        via: >-
+          The Email Content object, requiring at minimum an `html` key, with an
+          optional `text` key (type `document`) supporting Liquid templating.
+
+  - name: Conversion
+    aka: Goal
+    description: A tracked conversion, matched by URL.
+    key_fields: [id, status, name, url, value, count_type]
+    field_notes:
+      value: Conversion values must be less than 2,147,483,647.
+      count_type: one_per_visitor or all.
+    operations: [listGoals]
+    documented_not_in_spec: [Fetch a conversion]
+    relationships:
+      - belongs_to: Account
+        via: links.accounts.goals
+
+  - name: Event
+    description: A custom event performed by a subscriber.
+    operations: [recordEvent, batchEvents, listEventActions]
+    relationships:
+      - belongs_to: Subscriber
+      - belongs_to: Account
+    emits: subscriber.performed_custom_event webhook
+
+  - name: Form
+    description: A Drip-hosted signup form.
+    operations: [listForms]
+    documented_not_in_spec: [Fetch a form]
+    relationships:
+      - belongs_to: Account
+      - has_many: Subscriber
+        via: form submissions create subscribers
+    client_surface: components/drip-components.yml (the form widget and showForm/hideForm)
+
+  - name: CustomFieldIdentifier
+    description: The set of custom field names in use on an account.
+    operations: [listCustomFields]
+    relationships:
+      - belongs_to: Account
+      - describes: Subscriber.custom_fields
+
+  - name: Tag
+    description: A label applied to subscribers.
+    documented_not_in_spec:
+      - List all tags used in an account
+      - Apply a tag to a subscriber
+      - Remove a tag from a subscriber
+    relationships:
+      - belongs_to: Account
+      - has_many: Subscriber
+
+  - name: Order
+    status: legacy
+    description: >-
+      The v2 order/refund model. Superseded by Shopper Activity Order but still
+      documented and callable.
+    operations: [createOrUpdateOrder]
+    documented_not_in_spec: [Create or update a refund, Order events]
+    relationships:
+      - belongs_to: Subscriber
+      - belongs_to: Account
+    see: lifecycle/drip-lifecycle.yml
+
+  - name: ShopperActivityCart
+    description: Ecommerce cart activity ingested on the v3 surface.
+    operations: [batchShopperCarts]
+    relationships:
+      - belongs_to: Subscriber
+      - has_many: ShopperActivityProduct
+
+  - name: ShopperActivityOrder
+    description: Ecommerce order activity ingested on the v3 surface. Replaces Order (Legacy).
+    operations: [batchShopperOrders]
+    relationships:
+      - belongs_to: Subscriber
+      - has_many: ShopperActivityProduct
+
+  - name: ShopperActivityProduct
+    description: Product catalog activity ingested on the v3 surface.
+    operations: [batchShopperProducts]
+    relationships:
+      - belongs_to: Account
+
+  - name: Workflow
+    description: A visual automation. Not present in the repo OpenAPI at all.
+    documented_not_in_spec:
+      - List all workflows
+      - Fetch a workflow
+      - Activate a workflow
+      - Pause a workflow
+      - Start someone on a workflow
+      - Remove a subscriber from a workflow
+      - List all workflow triggers
+      - Create a workflow trigger
+      - Update a workflow trigger
+    relationships:
+      - belongs_to: Account
+      - has_many: WorkflowTrigger
+      - has_many: Subscriber
+        via: workflow subscriptions
+    state_machine:
+      states: [active, paused]
+
+  - name: WorkflowTrigger
+    description: The condition that starts a workflow.
+    relationships:
+      - belongs_to: Workflow
+
+  - name: Webhook
+    description: A registered POST target for subscriber events.
+    key_fields: [id, href, post_url, version, include_received_email, events, created_at]
+    relationships:
+      - belongs_to: Account
+        via: links.webhooks.account
+    detail: asyncapi/drip-webhooks.yml
+
+  - name: EmailMetric
+    description: Aggregated email performance, returned as a report rather than a resource.
+    documented_not_in_spec: [Fetch email metrics]
+    shape: 'A summary object plus an emails[] array; not paginated.'
+    filters: [broadcast_ids (max 1,000 resolved emails), workflow_ids (max 25), date range (max 366 days)]
+    relationships:
+      - belongs_to: Account
+      - references: Broadcast
+      - references: Workflow
+
+  - name: User
+    description: The authenticated Drip user.
+    documented_not_in_spec: [Fetch the authenticated user]
+    relationships:
+      - has_many: Account
+
+coverage:
+  entities_documented: 19
+  entities_with_openapi_operations: 12
+  operations_in_openapi: 22
+  note: >-
+    The gap between the documented model and the machine-readable one is the
+    headline finding. Workflows, Tags, Users, Webhooks, Metrics, subscriber
+    single-record CRUD and broadcast CRUD are all documented for humans and
+    absent from every OpenAPI in this repo — because those specs are API
+    Evangelist best-effort transcriptions of an earlier version of the
+    reference, not a Drip-published contract. See
+    openapi/_original/drip-openapi.yml (info.contact names API Evangelist).
+
+render: null
+render_note: No subway/ diagram exists for this provider yet.

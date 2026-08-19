@@ -1,0 +1,23 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Contact: mailto:security@drip.com
+Preferred-Languages: en
+Canonical: https://www.getdrip.com/.well-known/security.txt
+Encryption: https://www.getdrip.com/security-pgp-key.txt
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEl/xh82OH14OldmWWgr4dV4+iQQ8FAl6fY70ACgkQgr4dV4+i
+QQ+ugw/+KX+8fguBXcFPE4nqkdQ8bSRLzjy4RiIeRlmRlvUZQeI39vdSuaYEYeCy
+Go10q3/aPPj6Jo7Qu3pC56YDmdlivmeT+h8zwlztBAOqDrYp+4oKx6xTiWEI07Xf
+sO2JMFMpF5NVsXO9yQuDn60LrRpxJ0ipgeK665Lf9eBo5Ne3fHrv4uvTL2Y98l9o
+gSMngwNjLnxnGfDU3Xfn42W4wm5iU3PYZbMnkKOMLsOY3Uj9diGJTDnioXF5b/1W
+2ew/rv5KEG4YPmw7l00VuMdxRkJJMcR0g3mpEF+Rh4j6hK18ftosXNlXntkjUSHk
+hMrKY+W/ENbnr2S9uLMiQqJZor0EZnva9mHJzaWTSSBqAOOSv32gO7hFXJDycnM6
+7UzO5gQ0SnhkOd9p/UJonD4/pEI+b4ctUjZFgu47x0mFlTVnkQvK6RgEm1iWdllS
+JKB2ux+YNj6siCNtu9f9WSUGwjnVc4evJVlLhvo/PzbklRbmXE4b+OsMcTgKX3dS
+3VONtIDb53UxiurS9BkFdkLtfE0eyHaXhg85P2M1wPKR2f//Tm7GScDNpqOaoEGJ
+RwffqHZ9EvMmRC+5gOs6azBtPk+Q8yh1Yc+TZdgK3eOZAbFeHV4rXPDOTPTT14tx
+IqWZoaKdXcTxy9vn8tnOVRYfcHbcnLwE/4B2mZyhDw40pXwh21g=
+=k6PM
+-----END PGP SIGNATURE-----

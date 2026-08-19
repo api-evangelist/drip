@@ -1,0 +1,52 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Drip REST Accounts Broadcasts API
+  version: 1.0.0
+extends: openapi/drip-broadcasts-api-openapi.yml
+generated: '2026-08-13'
+method: generated
+source: openapi/drip-broadcasts-api-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      catalog: https://apis.io/drip
+      provider: Drip
+      maintainer: Kin Lane <kin@apievangelist.com>
+      provenance: The extended document is an API Evangelist best-effort OpenAPI written from https://developer.drip.com/.
+        Drip publishes no OpenAPI of its own.
+      artifacts:
+      - apis.yml
+      - authentication/drip-authentication.yml
+      - scopes/drip-scopes.yml
+      - conventions/drip-conventions.yml
+      - errors/drip-problem-types.yml
+      - rate-limits/drip-rate-limits.yml
+      - lifecycle/drip-lifecycle.yml
+      - conformance/drip-conformance.yml
+      - data-model/drip-data-model.yml
+      - packages/drip-packages.yml
+      - mcp/drip-mcp.yml
+      - asyncapi/drip-webhooks.yml
+      - well-known/drip-well-known.yml
+- target: $.info
+  update:
+    x-runtime-semantics:
+      authentication: HTTP Basic (API token as username, empty password) or OAuth 2.0 Bearer. See authentication/drip-authentication.yml.
+      oauth_scopes:
+      - public
+      - write
+      idempotency: Not supported. Writes are upsert-shaped on a natural key. See conventions/drip-conventions.yml.
+      pagination: page query parameter, 100 items per page, meta{page,count,total_pages,total_count}.
+      error_envelope: '{"errors":[{"code","attribute","message"}]} — not RFC 9457. See errors/drip-problem-types.yml.'
+      rate_limit: 3,600 requests/hour standard; 50/hour on batch endpoints. Headers X-RateLimit-Limit
+        and X-RateLimit-Remaining; 429 on exhaustion. See rate-limits/drip-rate-limits.yml.
+      user_agent: 'Drip asks every caller to send User-Agent: Your App Name (www.yourapp.com).'
+      transport: HTTPS with SNI required; JSON request bodies.
+- target: $.info
+  update:
+    x-agent-surface:
+      mcp: https://api.getdrip.com/mcp (remote, OAuth-gated). See mcp/drip-mcp.yml.
+      webhooks: 29 subscriber events, unsigned. See asyncapi/drip-webhooks.yml.
+      agent_card: null
+      llms_txt: Not published by Drip; generated copy at llms/drip-llms.txt.

@@ -1,0 +1,156 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Live probes of https://api.getdrip.com/.well-known/* (2026-08-13) plus the
+  published reference at https://developer.drip.com/. Each entry names the
+  evidence it rests on; nothing is asserted from vendor marketing.
+description: >-
+  Which cross-cutting industry standards the Drip API actually conforms to.
+  Drip does well on the OAuth/MCP discovery stack — RFC 8414, RFC 9728, RFC
+  7591 dynamic client registration and PKCE are all live and machine-readable —
+  and poorly on the HTTP-semantics standards: no RFC 9457 problem details, no
+  RFC 9331 rate-limit headers, no RFC 8594 deprecation signalling, no
+  idempotency keys. Compliance certifications are not published on any
+  reachable Drip surface.
+
+conformance:
+  - id: oauth2
+    name: OAuth 2.0 (RFC 6749) authorization code
+    conforms: true
+    evidence: >-
+      https://api.getdrip.com/.well-known/oauth-authorization-server returns 200
+      with response_types_supported ["code"] and grant_types_supported
+      ["authorization_code","refresh_token"]; the flow is documented at
+      https://developer.drip.com/#oauth.
+  - id: rfc8414
+    name: OAuth 2.0 Authorization Server Metadata
+    conforms: true
+    evidence: >-
+      /.well-known/oauth-authorization-server returns 200 application/json with
+      issuer, authorization_endpoint, token_endpoint, registration_endpoint,
+      response_types_supported, grant_types_supported,
+      code_challenge_methods_supported, token_endpoint_auth_methods_supported
+      and scopes_supported.
+  - id: rfc9728
+    name: OAuth 2.0 Protected Resource Metadata
+    conforms: true
+    evidence: >-
+      /.well-known/oauth-protected-resource and
+      /.well-known/oauth-protected-resource/mcp both return 200 with
+      {"resource":"https://api.getdrip.com/mcp","authorization_servers":[...]},
+      and the MCP endpoint's 401 carries
+      WWW-Authenticate: Bearer resource_metadata="...".
+  - id: rfc7591
+    name: OAuth 2.0 Dynamic Client Registration
+    conforms: true
+    evidence: >-
+      registration_endpoint https://api.getdrip.com/oauth/register is advertised
+      in the authorization server metadata.
+  - id: rfc7636
+    name: PKCE
+    conforms: true
+    evidence: code_challenge_methods_supported ["S256"] in the AS metadata.
+  - id: mcp
+    name: Model Context Protocol
+    conforms: partial
+    evidence: >-
+      A live remote MCP endpoint at https://api.getdrip.com/mcp answering
+      JSON-RPC with a spec-shaped 401 + protected-resource challenge. Tool-level
+      conformance could not be verified because tools/list is auth-gated. See
+      mcp/drip-mcp.yml.
+  - id: oidc
+    name: OpenID Connect
+    conforms: false
+    evidence: >-
+      /.well-known/openid-configuration returns 404 on api.getdrip.com,
+      www.getdrip.com and developer.drip.com. Drip is an OAuth authorization
+      server, not an OIDC provider.
+  - id: rfc9457
+    name: Problem Details for HTTP APIs
+    conforms: false
+    evidence: >-
+      Errors use a custom {"errors":[{code, attribute, message}]} envelope with
+      application/json, not application/problem+json. See
+      errors/drip-problem-types.yml.
+  - id: rfc9331
+    name: RateLimit header fields for HTTP
+    conforms: false
+    evidence: >-
+      Responses carry the legacy X-RateLimit-Limit / X-RateLimit-Remaining pair
+      and no RateLimit / RateLimit-Policy headers. There is no reset header at
+      all on the global limiter. Retry-After (RFC 9110) IS returned by the newer
+      per-endpoint limiters.
+  - id: rfc8594
+    name: Sunset HTTP header
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation headers. Deprecated fields and the legacy Orders
+      family are marked in prose only, with no dates. See
+      lifecycle/drip-lifecycle.yml.
+  - id: idempotency
+    name: Idempotency keys (draft-ietf-httpapi-idempotency-key-header)
+    conforms: false
+    evidence: >-
+      No idempotency key header is documented. Writes are upsert-shaped on a
+      natural key instead. See conventions/drip-conventions.yml.
+  - id: pagination
+    name: Pagination
+    conforms: true
+    style: page-number
+    evidence: >-
+      `page` query parameter with a meta object carrying page, count,
+      total_pages, total_count; 100 items per page.
+      https://developer.drip.com/#pagination
+  - id: webhooks
+    name: Webhook event delivery
+    conforms: true
+    evidence: >-
+      29 documented subscriber webhook events plus a webhook management API
+      (list/fetch/create/destroy), with retry-for-3-days delivery semantics.
+      See asyncapi/drip-webhooks.yml.
+  - id: asyncapi
+    name: AsyncAPI
+    conforms: false
+    evidence: >-
+      Drip publishes no AsyncAPI document for its webhook surface. Probed
+      /asyncapi.yaml and /asyncapi.json: 403 (the api.getdrip.com catch-all
+      Auth0 error shell) on the API host, 404 on developer.drip.com.
+  - id: json-api
+    name: JSON:API
+    conforms: false
+    evidence: >-
+      Responses are resource-keyed plain JSON with an href/links hypermedia
+      convention of Drip's own, not the JSON:API media type or document
+      structure.
+  - id: openapi
+    name: OpenAPI
+    conforms: false
+    evidence: >-
+      Drip publishes no OpenAPI document. /openapi.json, /openapi.yaml,
+      /swagger.json and /api-docs on api.getdrip.com return 403 (Auth0 error
+      shell) or 404, and the same paths on developer.drip.com return 404. The
+      specs in openapi/ are API Evangelist best-effort documents written from
+      the human reference — see openapi/_original/drip-openapi.yml info.contact.
+  - id: security-txt
+    name: RFC 9116 security.txt
+    conforms: partial
+    evidence: >-
+      A PGP-signed security.txt is served at
+      https://api.getdrip.com/.well-known/security.txt and
+      https://www.getdrip.com/.well-known/security.txt with Contact,
+      Preferred-Languages, Canonical and Encryption fields. It is missing the
+      RFC 9116 REQUIRED `Expires` field, and the PGP signature is dated 2020,
+      so it has not been refreshed. See
+      security/drip-vulnerability-disclosure.yml.
+
+compliance_certifications:
+  published: false
+  note: >-
+    No trust center, SOC 2, ISO 27001, PCI or HIPAA attestation was reachable.
+    Anything Drip publishes on that front would live on www.drip.com, which
+    returns HTTP 403 with `cf-mitigated: challenge` to every non-browser client,
+    so this is recorded as "not verifiable from here" rather than "absent". No
+    Compliance pointer is emitted.
+  probed:
+    - url: https://www.drip.com/security
+      status: 403

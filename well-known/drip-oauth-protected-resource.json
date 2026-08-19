@@ -1,0 +1,6 @@
+{
+  "resource": "https://api.getdrip.com/mcp",
+  "authorization_servers": [
+    "https://api.getdrip.com"
+  ]
+}

@@ -1,0 +1,86 @@
+generated: '2026-08-13'
+method: probed
+status: published
+source: >-
+  https://api.getdrip.com/.well-known/oauth-protected-resource (HTTP 200) and a
+  live POST of tools/list to https://api.getdrip.com/mcp (HTTP 401 with
+  WWW-Authenticate: Bearer resource_metadata=...). Both probed 2026-08-13.
+description: >-
+  Drip operates a real, reachable remote MCP server at https://api.getdrip.com/mcp.
+  It is discoverable the standards-compliant way: the API host publishes RFC 9728
+  OAuth protected-resource metadata naming the MCP endpoint as the resource, and
+  the endpoint itself answers an unauthenticated request with a 401 carrying
+  `WWW-Authenticate: Bearer resource_metadata="https://api.getdrip.com/.well-known/oauth-protected-resource/mcp"`.
+  The matching authorization server (RFC 8414) supports dynamic client
+  registration and PKCE S256. The same surface is mirrored on the application
+  host at https://www.getdrip.com/mcp.
+
+  The tool list is auth-gated: an anonymous tools/list returns
+  {"errors":[{"code":"authentication_error",...}]}, so no tool names or
+  inputSchemas are recorded here. They require an authenticated OAuth
+  introspection pass. Nothing is invented to fill the gap. Note also that as of
+  2026-08-13 the MCP server is NOT mentioned anywhere in the public API
+  reference at https://developer.drip.com/ — it is discoverable only from
+  /.well-known/, which is a discovery gap worth reporting to the provider.
+
+server:
+  name: drip
+  transport: http
+  url: https://api.getdrip.com/mcp
+  auth: oauth2
+  protected_resource: well-known/drip-oauth-protected-resource.json
+  authorization_server: https://api.getdrip.com
+  authorization_server_metadata: well-known/drip-oauth-authorization-server.json
+  mirrors:
+    - url: https://www.getdrip.com/mcp
+      note: Same server on the application host; its own protected-resource metadata names https://www.getdrip.com/mcp.
+
+oauth:
+  issuer: https://api.getdrip.com
+  authorization_endpoint: https://www.getdrip.com/oauth/authorize
+  token_endpoint: https://www.getdrip.com/oauth/token
+  registration_endpoint: https://api.getdrip.com/oauth/register
+  dynamic_client_registration: true
+  grant_types_supported: [authorization_code, refresh_token]
+  code_challenge_methods_supported: [S256]
+  token_endpoint_auth_methods_supported: [none, client_secret_basic, client_secret_post]
+  scopes_supported: [public, write]
+  detail: scopes/drip-scopes.yml
+
+tools: []
+tools_note: >-
+  Not recorded. tools/list requires an OAuth bearer token; the anonymous probe
+  returned HTTP 401 authentication_error. Drip publishes no llms.txt or MCP
+  documentation page to fall back on, so there is no honest name-and-description
+  list to capture. Re-run with an authenticated token to populate.
+
+deployment:
+  mode: remote
+  endpoint: https://api.getdrip.com/mcp
+  auth: oauth
+  verified: probed
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - url: https://api.getdrip.com/.well-known/oauth-protected-resource
+      method: GET
+      http_status: 200
+      content_type: application/json
+    - url: https://api.getdrip.com/.well-known/oauth-protected-resource/mcp
+      method: GET
+      http_status: 200
+      content_type: application/json
+    - url: https://api.getdrip.com/.well-known/oauth-authorization-server
+      method: GET
+      http_status: 200
+      content_type: application/json
+    - url: https://api.getdrip.com/mcp
+      method: POST
+      body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+      http_status: 401
+      www_authenticate: Bearer resource_metadata="https://api.getdrip.com/.well-known/oauth-protected-resource/mcp"
+    - url: https://www.getdrip.com/mcp
+      method: GET
+      http_status: 401
+      www_authenticate: Bearer resource_metadata="https://www.getdrip.com/.well-known/oauth-protected-resource/mcp"

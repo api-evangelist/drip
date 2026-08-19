@@ -1,0 +1,167 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.drip.com/#errors, #validation-errors, #transition-errors,
+  #rate-limiting, #send-a-test-email and #fetch-email-metrics — the published
+  error reference. Read 2026-08-13. Cross-checked against the response codes
+  declared in openapi/*.yml.
+docs: https://developer.drip.com/#errors
+description: >-
+  Drip's error catalog. The envelope is a JSON object with an `errors` array;
+  each member carries a machine-readable `code`, a human `message`, and — for
+  validation failures only — the offending `attribute`. It is NOT RFC 9457
+  problem+json, and there is no `type` URI, so a client dispatches on `code`.
+format: custom
+rfc9457: false
+content_type: application/json
+envelope:
+  shape: '{"errors": [{"code": "<slug>", "attribute": "<field>", "message": "<human text>"}]}'
+  fields:
+    code: Machine-readable error slug. Always present.
+    attribute: The invalid field. Present on validation errors only.
+    message: Human-readable explanation. Present on most, absent on some transition errors.
+  exceptions:
+    - status: 429
+      shape: '{"message": "...", "documentation": "https://www.getdrip.com/docs/rest-api#rate-limting"}'
+      note: >-
+        The global rate limiter does not use the errors[] envelope. The newer
+        per-endpoint limiters (send test email, email metrics) do. A client must
+        handle both shapes on 429.
+
+problem_types:
+  - code: authentication_error
+    status: 401
+    title: Authentication failed
+    detail: >-
+      Anonymous access to an endpoint that requires authentication, or an
+      invalid API token / access token. Assume authentication is required on
+      every endpoint unless the docs say otherwise.
+    remediation: >-
+      Send the API token as the HTTP Basic username with an empty password, or
+      a valid OAuth bearer token. See authentication/drip-authentication.yml.
+    observed: >-
+      Returned verbatim by https://api.getdrip.com/mcp on an unauthenticated
+      tools/list probe, 2026-08-13.
+  - code: authorization_error
+    status: 403
+    title: Not authorized to access this resource
+    detail: Authenticated, but the credential lacks permission for this resource.
+    remediation: Check the account the token belongs to and the OAuth scope granted (public vs write).
+  - code: not_found_error
+    status: 404
+    title: The resource you requested was not found
+    detail: The referenced resource does not exist on this account.
+    remediation: Verify the account_id path segment and the resource id.
+  - code: presence_error
+    status: 422
+    title: Attribute is required
+    category: validation
+    remediation: Supply the attribute named in `attribute`.
+  - code: length_error
+    status: 422
+    title: Attribute length out of bounds
+    category: validation
+  - code: uniqueness_error
+    status: 422
+    title: Attribute must be unique
+    category: validation
+  - code: email_error
+    status: 422
+    title: Attribute must be a valid email address
+    category: validation
+  - code: sms_error
+    status: 422
+    title: Attribute must be a valid US mobile number in E.164 format
+    category: validation
+    detail: 'E.g. "+16125551212".'
+  - code: url_error
+    status: 422
+    title: Attribute must be a valid URL
+    category: validation
+  - code: domain_error
+    status: 422
+    title: Attribute must be a valid domain name
+    category: validation
+  - code: time_error
+    status: 422
+    title: Attribute must be a valid ISO-8601 time
+    category: validation
+  - code: email_address_list_error
+    status: 422
+    title: Attribute must be a valid comma-separated list of email addresses
+    category: validation
+  - code: days_of_the_week_error
+    status: 422
+    title: Attribute must be a valid days-of-the-week mask
+    category: validation
+    detail: 'Must match /\A(0|1){7}\z/ and must not be 0000000.'
+  - code: unavailable_error
+    status: 422
+    title: A resource has been disabled or deleted
+    category: validation
+    note: >-
+      The same slug is reused with status 503 on the email metrics endpoint
+      ("Service temporarily unavailable, try again later"), so dispatch on
+      status as well as code.
+  - code: format_error
+    status: 422
+    title: A resource identifier or object is not formatted correctly
+    category: validation
+  - code: range_error
+    status: 422
+    title: A numeric value is out of range
+    category: validation
+  - code: validation_error
+    status: 422
+    title: Generic validation failure
+    category: validation
+    detail: >-
+      Used by the send-test-email endpoint when a recipient is neither on a
+      verified sending domain nor an active account member.
+  - code: no_postal_address_error
+    status: 403
+    title: State transition not allowed — no postal address
+    category: transition
+    detail: >-
+      State transition endpoints (activate/pause a campaign or workflow)
+      respond 403 with a transition error when the transition is not permitted.
+      Transition errors may carry a `code` with no `message`.
+    remediation: >-
+      Set a default postal address on the account (required by CAN-SPAM) before
+      activating a sending campaign.
+  - code: rate_limit_error
+    status: 429
+    title: Endpoint rate limit exceeded
+    detail: 'Hourly test email limit exceeded. Maximum 20 requests per hour.'
+    headers: [Retry-After]
+    remediation: Wait for the window named by Retry-After.
+    detail_ref: rate-limits/drip-rate-limits.yml
+  - code: rate_limit_exceeded
+    status: 429
+    title: Endpoint rate limit exceeded (email metrics)
+    detail: 'Rate limit exceeded: at most 20 requests per account per hour.'
+    headers: [Retry-After]
+    note: >-
+      A second slug for the same condition on a different endpoint —
+      rate_limit_error vs rate_limit_exceeded. Clients must match both.
+  - code: bad_request
+    status: 400
+    title: Argument invalid or over a limit
+    detail: >-
+      Email metrics rejects a date range over 366 days, more than 25
+      workflow_ids, or filters resolving to more than 1,000 emails.
+  - code: null
+    status: 429
+    title: API rate limit exceeded
+    detail: 'API rate limit exceeded. Please try again in an hour.'
+    envelope: flat
+    note: >-
+      The global 3,600/hour limiter. No `errors` array and no `code` — the body
+      is {"message", "documentation"}.
+
+status_codes_in_spec:
+  note: >-
+    The refined OpenAPI documents in openapi/ declare success responses only;
+    none of the 4xx/5xx shapes above appear in the spec. That is a gap in the
+    machine-readable contract relative to the human docs, and it is why this
+    artifact is searched rather than derived.

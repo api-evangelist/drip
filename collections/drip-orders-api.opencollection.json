@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip REST Accounts Orders API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Orders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create or update an order (legacy)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v2/:account_id/orders",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Create or update an order (legacy)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

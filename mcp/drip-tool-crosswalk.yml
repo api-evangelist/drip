@@ -1,0 +1,155 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  openapi/*.yml (10 refined per-tag documents, 22 operations) bound against the
+  live MCP surface at https://api.getdrip.com/mcp, whose tools/list was probed
+  2026-08-13 and returned HTTP 401.
+description: >-
+  Binding between Drip's MCP tools and the REST operations that back them. The
+  crosswalk is EMPTY on purpose. Drip's MCP server is real and reachable (see
+  mcp/drip-mcp.yml) but its tools/list is OAuth-gated, and Drip publishes no
+  llms.txt, no MCP documentation page and no tool inventory anywhere public, so
+  there is no honest source for tool names. Mapping "probably there is a
+  create_subscriber tool" would be fabrication of exactly the kind this
+  pipeline forbids, so nothing is guessed. What IS recorded is the other half
+  of the picture: every REST operation the catalog holds, listed as rest_only,
+  which is the accurate statement today — no tool is known to cover any of
+  them.
+
+surfaces:
+  openapi:
+    published_by_provider: false
+    files:
+      - openapi/drip-accounts-api-openapi.yml
+      - openapi/drip-broadcasts-api-openapi.yml
+      - openapi/drip-campaigns-api-openapi.yml
+      - openapi/drip-conversions-api-openapi.yml
+      - openapi/drip-custom-fields-api-openapi.yml
+      - openapi/drip-events-api-openapi.yml
+      - openapi/drip-forms-api-openapi.yml
+      - openapi/drip-orders-api-openapi.yml
+      - openapi/drip-shopper-activity-api-openapi.yml
+      - openapi/drip-subscribers-api-openapi.yml
+    note: >-
+      API Evangelist best-effort documents written from
+      https://developer.drip.com/, not a Drip-published contract.
+  graphql:
+    endpoint: null
+    note: Drip publishes no GraphQL surface.
+  mcp:
+    url: https://api.getdrip.com/mcp
+    gated: true
+    gate: OAuth 2.0 bearer (RFC 9728 protected resource)
+    probe_status: 401
+    tools_known: 0
+
+crosswalk: []
+
+mcp_only: []
+mcp_only_note: >-
+  Cannot be populated without an authenticated tools/list. Any tool Drip
+  exposes that has no REST counterpart would belong here.
+
+rest_only:
+  - operationId: listAccounts
+    method: GET
+    path: /v2/accounts
+    tag: Accounts
+  - operationId: getAccount
+    method: GET
+    path: /v2/accounts/{account_id}
+    tag: Accounts
+  - operationId: listBroadcasts
+    method: GET
+    path: /v2/{account_id}/broadcasts
+    tag: Broadcasts
+  - operationId: getBroadcast
+    method: GET
+    path: /v2/{account_id}/broadcasts/{broadcast_id}
+    tag: Broadcasts
+  - operationId: listCampaigns
+    method: GET
+    path: /v2/{account_id}/campaigns
+    tag: Campaigns
+  - operationId: getCampaign
+    method: GET
+    path: /v2/{account_id}/campaigns/{campaign_id}
+    tag: Campaigns
+  - operationId: activateCampaign
+    method: POST
+    path: /v2/{account_id}/campaigns/{campaign_id}/activate
+    tag: Campaigns
+  - operationId: pauseCampaign
+    method: POST
+    path: /v2/{account_id}/campaigns/{campaign_id}/pause
+    tag: Campaigns
+  - operationId: listCampaignSubscribers
+    method: GET
+    path: /v2/{account_id}/campaigns/{campaign_id}/subscribers
+    tag: Campaigns
+  - operationId: subscribeToCampaign
+    method: POST
+    path: /v2/{account_id}/campaigns/{campaign_id}/subscribers
+    tag: Campaigns
+  - operationId: listGoals
+    method: GET
+    path: /v2/{account_id}/goals
+    tag: Conversions
+  - operationId: listCustomFields
+    method: GET
+    path: /v2/{account_id}/custom_field_identifiers
+    tag: Custom Fields
+  - operationId: recordEvent
+    method: POST
+    path: /v2/{account_id}/events
+    tag: Events
+  - operationId: batchEvents
+    method: POST
+    path: /v2/{account_id}/events/batches
+    tag: Events
+  - operationId: listEventActions
+    method: GET
+    path: /v2/{account_id}/event_actions
+    tag: Events
+  - operationId: listForms
+    method: GET
+    path: /v2/{account_id}/forms
+    tag: Forms
+  - operationId: createOrUpdateOrder
+    method: POST
+    path: /v2/{account_id}/orders
+    tag: Orders
+    note: Legacy surface; superseded by batchShopperOrders. See lifecycle/drip-lifecycle.yml.
+  - operationId: batchSubscribers
+    method: POST
+    path: /v2/{account_id}/subscribers/batches
+    tag: Subscribers
+  - operationId: batchUnsubscribes
+    method: POST
+    path: /v2/{account_id}/unsubscribes/batches
+    tag: Subscribers
+  - operationId: batchShopperCarts
+    method: POST
+    path: /v3/{account_id}/shopper_activity/cart/batch
+    tag: Shopper Activity
+  - operationId: batchShopperOrders
+    method: POST
+    path: /v3/{account_id}/shopper_activity/order/batch
+    tag: Shopper Activity
+  - operationId: batchShopperProducts
+    method: POST
+    path: /v3/{account_id}/shopper_activity/product/batch
+    tag: Shopper Activity
+
+coverage:
+  mcp_tools_total: null
+  mcp_tools_mapped: 0
+  rest_operations_total: 22
+  rest_operations_mapped: 0
+  rest_operations_unmapped: 22
+  confidence: none
+  blocker: >-
+    Authenticated MCP introspection. Re-run tools/list with an OAuth bearer
+    token obtained through https://api.getdrip.com/oauth/register +
+    https://www.getdrip.com/oauth/authorize to populate crosswalk[] and
+    mcp_only[].

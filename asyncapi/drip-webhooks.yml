@@ -1,0 +1,165 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.drip.com/#webhooks and
+  https://developer.drip.com/#webhook-events — the published webhook management
+  API and event catalog. Read 2026-08-13. Event names extracted from the
+  worked payload examples in the reference, not from a list we composed.
+description: >-
+  Drip's event surface. There is NO AsyncAPI document — Drip publishes none and
+  none was found at /asyncapi.yaml or /asyncapi.json on any host — so this is a
+  webhook catalog rather than an AsyncAPI spec, and it is recorded as such
+  rather than fabricated into one. Drip delivers 29 documented subscriber
+  events as HTTP POSTs of JSON to a customer-supplied URL, and exposes a small
+  management API for registering those URLs.
+spec_type: null
+spec_published: false
+spec_probed:
+  - url: https://api.getdrip.com/asyncapi.yaml
+    status: 403
+  - url: https://developer.drip.com/asyncapi.yaml
+    status: 404
+
+transport: HTTP POST (webhook)
+content_type: application/json
+docs: https://developer.drip.com/#webhook-events
+
+envelope:
+  shape: '{"event": "<name>", "data": {"account_id": "...", "subscriber": {...}}, "occurred_at": "<ISO-8601>"}'
+  fields:
+    event: The webhook notification's event name.
+    data: Object carrying account_id and the subscriber (plus a `properties` object on some events).
+    account_id: The id of the account that sent the notification.
+    occurred_at: Time the event occurred, ISO-8601.
+  note: >-
+    Some events add a `properties` object inside `data` (e.g.
+    subscriber.marked_as_deliverable carries properties.source).
+
+delivery:
+  retry: >-
+    If the receiving endpoint rate-limits Drip, Drip retries for up to 3 days.
+  disable_on_failure: >-
+    Any other sustained error for 3 days notifies the account and temporarily
+    disables the webhook.
+  opt_in_events:
+    - subscriber.received_email
+  opt_in_note: >-
+    subscriber.received_email is NOT sent by default because of its volume; it
+    is enabled per-webhook with a checkbox in the webhook settings.
+  signing: false
+  signing_note: >-
+    No webhook signature header, shared secret or replay-protection scheme is
+    documented. A receiver cannot cryptographically verify that a POST came
+    from Drip.
+  versioning:
+    field: version
+    current: '2'
+    note: >-
+      The webhook resource carries its own version, independent of the REST API
+      path version. The docs state the current stable version is 2.
+
+management_api:
+  base: https://api.getdrip.com/v2/{account_id}/webhooks
+  operations:
+    - name: List all webhooks
+      method: GET
+      path: /v2/{account_id}/webhooks
+    - name: Fetch a webhook
+      method: GET
+      path: /v2/{account_id}/webhooks/{id}
+    - name: Create a new webhook
+      method: POST
+      path: /v2/{account_id}/webhooks
+    - name: Destroy a webhook
+      method: DELETE
+      path: /v2/{account_id}/webhooks/{id}
+  resource_fields:
+    id: Read-only Drip-generated webhook id.
+    href: Self link for the webhook record.
+    post_url: The URL Drip POSTs to.
+    version: Webhook payload version.
+    include_received_email: Whether subscriber.received_email events are delivered.
+    events: Array of event names this webhook subscribes to.
+    created_at: ISO-8601 creation timestamp.
+  ui_alternative: >-
+    Webhook URLs can also be added from the Drip Webhooks settings page without
+    touching the API.
+  note: >-
+    These four operations are documented but are NOT present in the repo's
+    openapi/ specs, which cover 22 operations and no webhook management.
+
+event_count: 29
+events:
+  - name: subscriber.created
+    description: A subscriber is created in the account.
+  - name: subscriber.deleted
+    description: A subscriber is deleted from the account.
+  - name: subscriber.marked_as_deliverable
+    description: A subscriber's address is marked deliverable. Carries properties.source.
+  - name: subscriber.marked_as_undeliverable
+    description: A subscriber's address is marked undeliverable.
+  - name: subscriber.subscribed_to_email_marketing
+    description: A subscriber opts in to email marketing.
+  - name: subscriber.subscribed_to_campaign
+    description: A subscriber is subscribed to an Email Series Campaign.
+  - name: subscriber.removed_from_campaign
+    description: A subscriber is removed from an Email Series Campaign.
+  - name: subscriber.unsubscribed_from_campaign
+    description: A subscriber unsubscribes from an Email Series Campaign.
+  - name: subscriber.unsubscribed_all
+    description: A subscriber unsubscribes from all mailings.
+  - name: subscriber.reactivated
+    description: A previously unsubscribed subscriber is reactivated.
+  - name: subscriber.completed_campaign
+    description: A subscriber completes an Email Series Campaign.
+  - name: subscriber.applied_tag
+    description: A tag is applied to a subscriber.
+  - name: subscriber.removed_tag
+    description: A tag is removed from a subscriber.
+  - name: subscriber.updated_custom_field
+    description: A subscriber custom field value changes.
+  - name: subscriber.updated_email_address
+    description: A subscriber's email address changes.
+  - name: subscriber.updated_lifetime_value
+    description: A subscriber's lifetime value changes.
+  - name: subscriber.updated_time_zone
+    description: A subscriber's time zone changes.
+  - name: subscriber.received_email
+    description: A subscriber receives an email. Off by default — high volume, opt-in per webhook.
+  - name: subscriber.opened_email
+    description: A subscriber opens an email.
+  - name: subscriber.clicked_email
+    description: A subscriber clicks a link in an email.
+  - name: subscriber.bounced
+    description: An email to the subscriber bounces.
+  - name: subscriber.complained
+    description: A subscriber files a spam complaint.
+  - name: subscriber.clicked_trigger_link
+    description: A subscriber clicks a trigger link.
+  - name: subscriber.visited_page
+    description: A subscriber visits a tracked page.
+  - name: subscriber.became_lead
+    description: A subscriber crosses the threshold to become a lead.
+  - name: subscriber.became_non_prospect
+    description: A subscriber is reclassified as a non-prospect.
+  - name: subscriber.updated_lead_score
+    description: A subscriber's lead score changes.
+  - name: subscriber.performed_custom_event
+    description: A subscriber performs a custom event recorded via the Events API.
+  - name: subscriber.updated_alias
+    description: A subscriber's alias changes.
+
+inbound_events:
+  note: >-
+    Drip also consumes events. POST /v2/{account_id}/events and its /batches
+    sibling record custom subscriber events, and the v3 Shopper Activity
+    endpoints ingest cart, order and product activity. Those are the write side
+    of the same event model and are covered by the OpenAPI in openapi/.
+
+gaps:
+  - No AsyncAPI document, so the event payload schemas are not machine-readable.
+  - No webhook signature or shared secret — receivers cannot authenticate Drip.
+  - >-
+    Event catalog is subscriber-scoped only. There are no account-level,
+    campaign-level or workflow-level events (e.g. campaign activated, workflow
+    published).

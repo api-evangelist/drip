@@ -1,0 +1,124 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.drip.com/ (the API reference ships Ruby and JavaScript
+  request tabs naming drip-ruby and drip-nodejs), https://github.com/DripEmail
+  (the provider GitHub organization), and the public registry metadata endpoints
+  registry.npmjs.org, rubygems.org/api/v1, repo.packagist.org and
+  api.nuget.org, all read 2026-08-13.
+description: >-
+  First-party Drip client libraries and site integrations. Every entry was
+  confirmed to live in the DripEmail GitHub organization before being marked
+  official. Versions and publication dates are read from registry metadata, not
+  from prose. The picture is uneven: the Ruby gem is actively maintained
+  (3.5.0, published 2026-08-11), the Node client is a year and a half stale,
+  and the .NET package on NuGet has not shipped since 2017 while its GitHub
+  repo was last touched in 2025 — a first-party SDK that no longer tracks its
+  own source.
+packages:
+  - language: ruby
+    registry: rubygems
+    name: drip-ruby
+    url: https://rubygems.org/gems/drip-ruby
+    source: https://github.com/DripEmail/drip-ruby
+    install: gem install drip-ruby
+    official: true
+    license: MIT
+    version: 3.5.0
+    published: '2026-08-11'
+    note: >-
+      The reference client. Named directly in the Ruby tab of the Drip API
+      reference. Most recently released of the four.
+  - language: javascript
+    registry: npm
+    name: drip-nodejs
+    url: https://www.npmjs.com/package/drip-nodejs
+    source: https://github.com/DripEmail/drip-nodejs
+    install: npm install drip-nodejs --save
+    official: true
+    license: MIT
+    version: 3.1.4
+    published: '2025-03-13'
+    note: >-
+      Named in the JavaScript tab of the Drip API reference. Repo last updated
+      2026-06-15 but no release has been published in ~17 months, so the
+      registry artifact trails the source.
+  - language: php
+    registry: packagist
+    name: dripemail/drip-php
+    url: https://packagist.org/packages/dripemail/drip-php
+    source: https://github.com/DripEmail/drip-php
+    install: composer require dripemail/drip-php
+    official: true
+    license: MIT
+    version: v1.5.1
+    published: '2025-03-12'
+    note: Object-oriented PHP wrapper for Drip's REST API v2.0.
+  - language: csharp
+    registry: nuget
+    name: Leadpages.Drip.DripDotNet
+    url: https://www.nuget.org/packages/Leadpages.Drip.DripDotNet
+    source: https://github.com/DripEmail/drip-dot-net
+    install: dotnet add package Leadpages.Drip.DripDotNet
+    official: true
+    version: 1.2.0
+    published: '2017-01-20'
+    note: >-
+      Published under the Leadpages namespace, from the era when Drip was a
+      Leadpages product. Nine years without a release; treat as abandoned even
+      though the GitHub repo saw commits in 2025.
+  - language: javascript
+    registry: cdn
+    name: Drip JavaScript tracking snippet (tag.getdrip.com)
+    url: https://tag.getdrip.com/
+    source: https://developer.drip.com/#js-api
+    install: >-
+      <script>var _dcq=_dcq||[];var _dcs=_dcs||{};_dcs.account='YOUR_ACCOUNT_ID';
+      (function(){var dc=document.createElement('script');dc.type='text/javascript';
+      dc.async=true;dc.src='//tag.getdrip.com/YOUR_ACCOUNT_ID.js';
+      var s=document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(dc,s);})();</script>
+    official: true
+    version: null
+    published: null
+    note: >-
+      Per-account CDN build served from //tag.getdrip.com/<account_id>.js. There
+      is no registry metadata endpoint and the script URL carries no version
+      segment, so it floats to whatever Drip is currently serving. A consumer
+      cannot pin it or tell what they are running — recorded as null on purpose,
+      not as unchecked. See components/drip-components.yml.
+  - language: php
+    registry: null
+    name: drip-woocommerce
+    url: https://github.com/DripEmail/drip-woocommerce
+    source: https://github.com/DripEmail/drip-woocommerce
+    official: true
+    version: null
+    published: null
+    note: >-
+      WordPress/WooCommerce plugin, distributed from GitHub rather than a
+      package registry, so no registry metadata exists to date it. Repo last
+      updated 2026-01-29.
+  - language: php
+    registry: null
+    name: magento-m2-extension
+    url: https://github.com/DripEmail/magento-m2-extension
+    source: https://github.com/DripEmail/magento-m2-extension
+    official: true
+    version: null
+    published: null
+    note: >-
+      Magento 2 integration, GitHub-distributed only. Repo last updated
+      2022-07-18. Its Magento 1 sibling (magento-m1-extension) and the older
+      drip-wordpress plugin are also in the org and are older still.
+not_found:
+  - registry: pypi
+    note: >-
+      No first-party Drip Python client. Nothing in the DripEmail GitHub
+      organization is Python, and PyPI carries no package published by Drip.
+  - registry: pkg.go.dev
+    note: No first-party Go client published by Drip.
+  - registry: maven-central
+    note: No first-party Java/Kotlin client published by Drip.
+  - registry: crates.io
+    note: No first-party Rust client published by Drip.

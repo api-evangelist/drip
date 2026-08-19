@@ -1,0 +1,79 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip REST Accounts Events API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Record a single event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v2/:account_id/events",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Record a single event"
+        },
+        {
+          "info": {
+            "name": "Batch record events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getdrip.com/v2/:account_id/events/batches",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Batch record events"
+        },
+        {
+          "info": {
+            "name": "List custom event actions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getdrip.com/v2/:account_id/event_actions",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List custom event actions"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

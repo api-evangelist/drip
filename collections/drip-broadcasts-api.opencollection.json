@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip REST Accounts Broadcasts API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Broadcasts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List single-email broadcasts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getdrip.com/v2/:account_id/broadcasts",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List single-email broadcasts"
+        },
+        {
+          "info": {
+            "name": "Fetch a broadcast",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getdrip.com/v2/:account_id/broadcasts/:broadcast_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "broadcast_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Fetch a broadcast"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

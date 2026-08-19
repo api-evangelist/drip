@@ -1,0 +1,44 @@
+generated: '2026-08-13'
+method: none
+source: null
+docs: https://www.drip.com/pricing
+description: >-
+  No plan data was captured. Drip's pricing page is not readable by any
+  non-browser client: https://www.drip.com/pricing returns HTTP 403 with the
+  response header `cf-mitigated: challenge` and a Cloudflare interstitial body
+  ("Just a moment..."). The same challenge fires on the drip.com root,
+  /security and /llms.txt, with and without a full browser User-Agent and
+  Sec-Fetch-* header set. This is a wall on OUR side of the fetch, not a
+  statement that Drip has no plans — Drip is a self-serve SaaS and certainly
+  publishes tiers to a human browser. Recording an empty plans artifact with
+  the evidence is the honest result; inventing tiers, or inferring them from
+  the marketing copy in blogs/, is not.
+  This file will upgrade to method: searched the moment the pricing page is
+  readable — do not overwrite it with anything derived.
+plan_count: 0
+plans: []
+pricing_model: unknown
+currency: null
+free_tier: unknown
+trial: unknown
+enterprise_only: false
+x-evidence:
+  checked: '2026-08-13'
+  probes:
+    - url: https://www.drip.com/pricing
+      status: 403
+      note: 'cf-mitigated: challenge; Cloudflare bot interstitial, 3.4 KB'
+    - url: https://www.drip.com/
+      status: 403
+      note: Same challenge on the site root.
+    - url: https://help.drip.com/
+      status: 403
+      note: Help center also challenged, so the pricing FAQ is unreachable too.
+related:
+  - >-
+    The API itself carries no metered or per-tier pricing signal: the reference
+    publishes one flat rate limit (3,600 requests/hour) that is not described as
+    varying by plan. See rate-limits/drip-rate-limits.yml.
+  - >-
+    accessModel in apis.yml is already recorded as pricing: unknown, which is
+    consistent with this result. Nothing here should be used to change it.

@@ -1,0 +1,43 @@
+generated: '2026-08-13'
+method: generated
+source: >-
+  Packaged Agent Skills generated from the OpenAPI documents in ../openapi/.
+  Every step is grounded in an operationId verified verbatim in those files;
+  cross-cutting rules cite ../conventions/, ../errors/, ../rate-limits/,
+  ../authentication/, ../scopes/, ../lifecycle/ and ../asyncapi/, all of which
+  were read from https://developer.drip.com/ on 2026-08-13.
+  Drip publishes no AGENTS.md, no skills directory and no llms.txt of its own —
+  probed https://developer.drip.com/llms.txt (404) and https://www.drip.com/llms.txt
+  (403, Cloudflare challenge) — so these are generated, not harvested.
+provenance_note: >-
+  The extended OpenAPI documents are API Evangelist best-effort transcriptions
+  of Drip's human reference, not a Drip-published contract. Skills are grounded
+  only in operationIds present in those files; documented-but-unspecified
+  operations (workflows, tags, users, webhook management, email metrics,
+  single-subscriber CRUD) are named as gaps rather than used as steps.
+skills:
+  - file: drip-import-subscribers.md
+    name: Bulk import subscribers into Drip
+    api: openapi/drip-subscribers-api-openapi.yml
+    operations: [listAccounts, getAccount, listCustomFields, batchSubscribers]
+  - file: drip-enroll-in-campaign.md
+    name: Enroll a subscriber in an email series campaign
+    api: openapi/drip-campaigns-api-openapi.yml
+    operations: [listCampaigns, getCampaign, activateCampaign, pauseCampaign, subscribeToCampaign, listCampaignSubscribers]
+  - file: drip-record-events.md
+    name: Record subscriber events in Drip
+    api: openapi/drip-events-api-openapi.yml
+    operations: [listEventActions, recordEvent, batchEvents]
+  - file: drip-sync-shopper-activity.md
+    name: Sync ecommerce shopper activity to Drip
+    api: openapi/drip-shopper-activity-api-openapi.yml
+    operations: [batchShopperProducts, batchShopperCarts, batchShopperOrders, createOrUpdateOrder]
+cross_cutting:
+  authentication: authentication/drip-authentication.yml
+  scopes: scopes/drip-scopes.yml
+  conventions: conventions/drip-conventions.yml
+  errors: errors/drip-problem-types.yml
+  rate_limits: rate-limits/drip-rate-limits.yml
+  lifecycle: lifecycle/drip-lifecycle.yml
+  events: asyncapi/drip-webhooks.yml
+  mcp: mcp/drip-mcp.yml

@@ -1,0 +1,128 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developer.drip.com/ (versioning is expressed in the URI path and the
+  reference marks specific fields Deprecated), https://status.drip.com/ and its
+  Statuspage API at https://status.drip.com/api/v2/summary.json (HTTP 200,
+  probed 2026-08-13). Deprecated operations were cross-checked against
+  openapi/*.yml.
+description: >-
+  Drip's version, deprecation and availability posture. Versioning is by URI
+  path with two live majors (v2 for the core API, v3 for Shopper Activity) and
+  a separate independently-versioned webhook payload. Drip publishes an
+  Atlassian Statuspage with per-component health and a machine-readable API.
+  What it does NOT publish is a dated changelog, a deprecation policy, a sunset
+  window, or an SLA — deprecation is communicated inline in the reference by
+  labelling individual fields and one endpoint family "Legacy"/"Deprecated",
+  with no removal date attached.
+
+versioning:
+  scheme: uri-path
+  current: v2
+  versions:
+    - version: v2
+      status: current
+      base: https://api.getdrip.com/v2
+      scope: >-
+        Accounts, Broadcasts (Single-Email Campaigns), Email Series Campaigns,
+        Custom Fields, Conversions, Events, Forms, Metrics, Orders (Legacy),
+        Subscribers, Tags, Users, Workflows, Webhooks.
+    - version: v3
+      status: current
+      base: https://api.getdrip.com/v3
+      scope: Shopper Activity — cart, order and product activity, including the batch endpoints.
+      note: >-
+        v3 does not supersede v2. The two majors coexist and cover different
+        resources, so "v3" here is a namespace, not a generation.
+  webhook_payload_version:
+    field: version
+    current: '2'
+    note: >-
+      The webhook resource carries its own `version` property; the docs state
+      "the current stable version is 2". Existing webhooks created at version 1
+      continue to receive version 1 payloads.
+  header_negotiation: false
+  version_in_header: false
+
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No deprecation policy page, no Deprecation/Sunset response headers, and no
+    announced removal dates. Deprecation is signalled only as prose in the
+    reference.
+  deprecated:
+    - kind: endpoint-family
+      name: Orders (Legacy)
+      paths:
+        - POST /v2/{account_id}/orders
+        - POST /v2/{account_id}/orders/batches
+        - POST /v2/{account_id}/refunds
+      status: legacy
+      replacement: >-
+        The v3 Shopper Activity Order endpoints
+        (/v3/{account_id}/shopper_activity/order and .../order/batch).
+      sunset_date: null
+      note: >-
+        Labelled "Orders (Legacy)" in the reference navigation. Still
+        documented and still callable; no removal date is given. Note this is
+        the operation the repo's openapi/drip-orders-api-openapi.yml describes
+        (createOrUpdateOrder), so the catalog's Orders API entry points at the
+        legacy surface.
+    - kind: field
+      name: send_to_confirmation_page
+      resource: Email Series Campaign
+      status: deprecated
+      sunset_date: null
+    - kind: field
+      name: use_custom_confirmation_page
+      resource: Email Series Campaign
+      status: deprecated
+      sunset_date: null
+    - kind: field
+      name: post_confirmation_url
+      resource: Email Series Campaign
+      status: deprecated
+      sunset_date: null
+
+status_page:
+  url: https://status.drip.com/
+  platform: Atlassian Statuspage
+  api: https://status.drip.com/api/v2/summary.json
+  status_json: https://status.drip.com/api/v2/status.json
+  feeds:
+    atom: https://status.drip.com/history.atom
+    rss: https://status.drip.com/history.rss
+  http_status: 200
+  probed: '2026-08-13'
+  components:
+    - REST and JavaScript APIs
+    - User Interface
+    - Email Sending
+    - New People Adds
+    - Workflows and Rules
+    - Support Systems
+    - Analytics
+  subscribe: email, SMS, Atom/RSS
+  note: >-
+    A separately named component for "REST and JavaScript APIs" means an
+    integrator can watch API health specifically rather than inferring it from
+    overall product health.
+
+sla:
+  published: false
+  note: No public SLA, uptime commitment or support-response target found.
+
+changelog:
+  published: false
+  note: >-
+    No dated API changelog. https://developer.drip.com/changelog returns 404 and
+    the reference carries no release-notes section. New surface (the send_test
+    endpoint, the email metrics report) has appeared in the reference without an
+    announcement an integrator could subscribe to. The Statuspage Atom/RSS feed
+    covers incidents, not API changes.
+  probed:
+    - url: https://developer.drip.com/changelog
+      status: 404
