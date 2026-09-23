@@ -3,9 +3,9 @@ info:
   title: API Evangelist enhancements for Drip REST Accounts Custom Fields API
   version: 1.0.0
 extends: openapi/drip-custom-fields-api-openapi.yml
-generated: '2026-08-13'
-method: generated
-source: openapi/drip-custom-fields-api-openapi.yml
+x-generated: '2026-08-13'
+x-method: generated
+x-source: openapi/drip-custom-fields-api-openapi.yml
 actions:
 - target: $.info
   update:

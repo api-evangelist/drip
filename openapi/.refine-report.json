@@ -1,16 +1,7 @@
 {
   "provider": "drip",
   "sources": [
-    "drip-accounts-api-openapi.yml",
-    "drip-broadcasts-api-openapi.yml",
-    "drip-campaigns-api-openapi.yml",
-    "drip-conversions-api-openapi.yml",
-    "drip-custom-fields-api-openapi.yml",
-    "drip-events-api-openapi.yml",
-    "drip-forms-api-openapi.yml",
-    "drip-orders-api-openapi.yml",
-    "drip-shopper-activity-api-openapi.yml",
-    "drip-subscribers-api-openapi.yml"
+    "_original/drip-openapi.yml"
   ],
   "outputs": [
     "drip-accounts-api-openapi.yml",
@@ -27,6 +18,21 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "drip-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "drip-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-broadcasts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-conversions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-custom-fields-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-forms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-orders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-shopper-activity-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drip-subscribers-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

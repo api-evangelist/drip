@@ -3,9 +3,9 @@ info:
   title: API Evangelist enhancements for Drip REST Accounts Orders API
   version: 1.0.0
 extends: openapi/drip-orders-api-openapi.yml
-generated: '2026-08-13'
-method: generated
-source: openapi/drip-orders-api-openapi.yml
+x-generated: '2026-08-13'
+x-method: generated
+x-source: openapi/drip-orders-api-openapi.yml
 actions:
 - target: $.info
   update:
