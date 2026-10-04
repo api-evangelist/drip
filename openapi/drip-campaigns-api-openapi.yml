@@ -85,14 +85,14 @@ paths:
           description: Subscribed
 components:
   parameters:
-    AccountId:
-      name: account_id
+    CampaignId:
+      name: campaign_id
       in: path
       required: true
       schema:
         type: string
-    CampaignId:
-      name: campaign_id
+    AccountId:
+      name: account_id
       in: path
       required: true
       schema:
