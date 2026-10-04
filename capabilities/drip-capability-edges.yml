@@ -1,0 +1,36 @@
+slug: drip
+provider: Drip
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Broadcasts
+  spec_file: drip-broadcasts-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: GET /v2/{account_id}/broadcasts — List single-email broadcasts
+  reason: Broadcasts are one-off marketing emails sent to subscriber lists in an email marketing platform,
+    which is squarely digital/email marketing execution. Slight ambiguity between digital marketing and
+    demand generation keeps this at 0.8.
+- tag: Campaigns
+  spec_file: drip-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: GET /v2/{account_id}/campaigns — List email series campaigns; POST .../activate — Activate
+    an email series campaign
+  reason: Operations manage email series campaigns and their subscribers, including activation and pausing
+    — email marketing automation. L2 could alternatively be demand generation (lifecycle marketing), hence
+    0.75.

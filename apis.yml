@@ -234,6 +234,9 @@ apis:
   - type: WellKnown
     url: well-known/drip-well-known.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/drip-capability-edges.yml
+    name: Drip Business Capability Map
   - type: AgenticAccess
     url: agentic-access/drip-agentic-access.yml
   - type: DomainSecurity
