@@ -1,0 +1,31 @@
+generated: '2026-10-12'
+method: searched
+source:
+- https://zapier.com/apps/drip/integrations
+- https://n8n.io/integrations/drip/
+- https://composio.dev/toolkits/drip
+- https://monid.ai/tools/drip
+checked:
+- https://composio.dev/toolkits/drip
+- https://monid.ai/tools/drip
+- https://n8n.io/integrations/drip/
+- https://zapier.com/apps/drip/integrations
+summary: null
+marketplace_apps: []
+edges:
+- partner_name: bonjoro
+  partner: bonjoro
+  partner_match: domain
+  type: contract
+  channel: partner-built
+  relationship: processor-connection
+  direction: partner-built
+  evidence: https://github.com/api-evangelist/bonjoro/blob/main/openapi/bonjoro-integrations-api-openapi.yml
+  contract_reference:
+    repo: bonjoro
+    spec_file: bonjoro-integrations-api-openapi.yml
+    value: drip
+    property: schemas.integration.provider
+    detected_by: detect-payment-method-edges.py
+    detected: '2026-10-12'
+templates: []
