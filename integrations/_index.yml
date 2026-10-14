@@ -21,3 +21,15 @@
     detected: '2026-10-12'
   status: not-a-workflow
   arazzo: null
+- slug: drip-twilio-segment
+  label: Twilio Segment
+  partner: segment
+  partner_name: Twilio Segment
+  type: coverage
+  marketplace: coverage
+  channel: partner-built
+  evidence: https://www.twilio.com/docs/segment/connections/sources/catalog/cloud-apps/drip
+  source: edge
+  relationship: connector-coverage
+  status: not-a-workflow
+  arazzo: null
