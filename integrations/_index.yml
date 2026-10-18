@@ -87,7 +87,7 @@
     - alpha
     in_cloud: true
     builder: unknown (community connector; contributor not in the record)
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: drip-fivetran
   label: Fivetran
@@ -113,5 +113,5 @@
     - connectors/applications/drip
     vendor_link: https://www.drip.com/
     builder: Fivetran
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
