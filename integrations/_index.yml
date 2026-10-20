@@ -21,6 +21,37 @@
     detected: '2026-10-12'
   status: not-a-workflow
   arazzo: null
+- slug: drip-npm-registry
+  label: npm registry
+  partner: npm
+  partner_name: npm registry
+  category: official SDK (JavaScript/TypeScript)
+  type: register
+  channel: package-registry
+  evidence: https://www.npmjs.com/package/drip-nodejs
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: drip-nodejs
+      version: 3.1.4
+      released: '2026-10-02'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/drip-nodejs
+      repo_leg: github-org:dripemail
+      publisher_leg: email:drip.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
 - slug: drip-twilio-segment
   label: Twilio Segment
   partner: segment
@@ -31,32 +62,6 @@
   evidence: https://www.twilio.com/docs/segment/connections/sources/catalog/cloud-apps/drip
   source: edge
   relationship: connector-coverage
-  status: not-a-workflow
-  arazzo: null
-- slug: drip-pipedream
-  label: Pipedream
-  partner: pipedream
-  partner_name: Pipedream
-  type: marketplace
-  marketplace: pipedream-components
-  channel: open-source-node
-  evidence: https://github.com/PipedreamHQ/pipedream/tree/94800dd6de6640b942c65ea7ee655f71ac56d438/components/drip
-  source: edge
-  relationship: ipaas-bridge
-  contract_reference:
-    register: Pipedream components (PipedreamHQ/pipedream components/)
-    spec_file: null
-    role: ipaas-connector:pipedream
-    registered_name: drip
-    matched_domain: drip.com
-    matched_by: domain
-    detected_by: sweep-workflow-automation.py
-    detected: '2026-10-15'
-    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
-    app_slug: drip
-    actions: true
-    sources: true
-    builder: Pipedream repo (component)
   status: not-a-workflow
   arazzo: null
 - slug: drip-airbyte
@@ -115,34 +120,29 @@
     builder: Fivetran
   status: not-a-workflow
   arazzo: null
-- slug: drip-npm-registry
-  label: npm registry
-  partner: npm
-  partner_name: npm registry
-  category: official SDK (JavaScript/TypeScript)
-  type: register
-  channel: package-registry
-  evidence: https://www.npmjs.com/package/drip-nodejs
+- slug: drip-pipedream
+  label: Pipedream
+  partner: pipedream
+  partner_name: Pipedream
+  type: marketplace
+  marketplace: pipedream-components
+  channel: open-source-node
+  evidence: https://github.com/PipedreamHQ/pipedream/tree/d5872355ef27b4efa769f05352f2820c299a456e/components/drip
   source: edge
-  relationship: distribution-channel
+  relationship: ipaas-bridge
   contract_reference:
-    register: npm registry (public registry JSON)
+    register: Pipedream components (PipedreamHQ/pipedream components/)
     spec_file: null
-    language: JavaScript/TypeScript
-    packages:
-    - name: drip-nodejs
-      version: 3.1.4
-      released: '2026-10-02'
-      released_field: modified
-      lapsed: false
-      page: https://www.npmjs.com/package/drip-nodejs
-      repo_leg: github-org:dripemail
-      publisher_leg: email:drip.com
-      matched_by: domain
-    current: true
-    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
-      24 months'
-    detected_by: sweep-official-sdks.py
-    detected: '2026-10-18'
+    role: ipaas-connector:pipedream
+    registered_name: drip
+    matched_domain: drip.com
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    app_slug: drip
+    actions: true
+    sources: true
+    builder: Pipedream repo (component)
   status: not-a-workflow
   arazzo: null
