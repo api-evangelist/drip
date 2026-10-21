@@ -25,6 +25,7 @@ checked:
 - https://www.twilio.com/docs/segment/connections/sources/catalog/cloud-apps/drip
 - https://zapier.com/apps/drip/integrations
 - yotpo/integrations/yotpo-integration-edges.yml
+- bigcommerce/integrations/bigcommerce-integration-edges.yml
 summary: null
 marketplace_apps: []
 edges:
@@ -188,4 +189,21 @@ edges:
   listing_count: 1
   detected: '2026-10-20'
   detected_by: mirror-platform-listings.py
+- partner_name: BigCommerce (own)
+  partner: bigcommerce
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.bigcommerce.com/apps/drip-email-marketing-2/
+  mirror_of: bigcommerce/integrations/bigcommerce-integration-edges.yml
+  apps:
+  - 'Drip: Marketing Automation for Ecommerce'
+  listing_count: 1
+  detected: '2026-10-20'
+  detected_by: mirror-platform-listings.py
+  category: Marketing, Email Marketing
 templates: []

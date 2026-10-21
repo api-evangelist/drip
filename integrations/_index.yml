@@ -158,3 +158,16 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: drip-bigcommerce-own
+  label: BigCommerce (own)
+  partner: bigcommerce
+  partner_name: BigCommerce (own)
+  category: Marketing, Email Marketing
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.bigcommerce.com/apps/drip-email-marketing-2/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
