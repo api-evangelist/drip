@@ -146,3 +146,15 @@
     builder: Pipedream repo (component)
   status: not-a-workflow
   arazzo: null
+- slug: drip-yotpo-own
+  label: Yotpo (own)
+  partner: yotpo
+  partner_name: Yotpo (own)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.yotpo.com/integrations/drip/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null

@@ -24,6 +24,7 @@ checked:
 - https://rubygems.org/api/v1
 - https://www.twilio.com/docs/segment/connections/sources/catalog/cloud-apps/drip
 - https://zapier.com/apps/drip/integrations
+- yotpo/integrations/yotpo-integration-edges.yml
 summary: null
 marketplace_apps: []
 edges:
@@ -171,4 +172,20 @@ edges:
     builder: Pipedream repo (component)
   detected_by: sweep-workflow-automation.py
   first_seen: '2026-10-15'
+- partner_name: Yotpo (own)
+  partner: yotpo
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.yotpo.com/integrations/drip/
+  mirror_of: yotpo/integrations/yotpo-integration-edges.yml
+  apps:
+  - Drip
+  listing_count: 1
+  detected: '2026-10-20'
+  detected_by: mirror-platform-listings.py
 templates: []
