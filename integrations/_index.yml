@@ -171,3 +171,34 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: drip-packagist
+  label: Packagist
+  partner: packagist
+  partner_name: Packagist
+  category: official SDK (PHP)
+  type: register
+  channel: package-registry
+  evidence: https://packagist.org/packages/dripemail/drip-php
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: Packagist (public registry JSON)
+    spec_file: null
+    language: PHP
+    packages:
+    - name: dripemail/drip-php
+      version: v1.5.1
+      released: '2025-03-12'
+      released_field: time
+      lapsed: false
+      page: https://packagist.org/packages/dripemail/drip-php
+      repo_leg: github-org:dripemail
+      publisher_leg: org:dripemail
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-php-dart-elixir-package-registries.py
+    detected: '2026-10-22'
+  status: not-a-workflow
+  arazzo: null
