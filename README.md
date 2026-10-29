@@ -1,4 +1,4 @@
-# Drip (drip)
+# Drip
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,63 +66,173 @@
 
 Drip is an email marketing and marketing automation platform built for ecommerce brands that combines subscriber management, segmentation, email campaigns, automation workflows, and shopper activity tracking. The Drip REST API gives programmatic access to subscribers, campaigns, events, workflows, broadcasts, orders, carts, and webhooks using either API token Basic authentication or OAuth 2.0.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/drip/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/drip/refs/heads/main/apis.yml)
+**Areas:** Email Marketing · Marketing Automation · E-Commerce · Customer Engagement · Campaigns · Workflows
 
-## Scope
+## Drip on APIs.io
 
-- **Type:** Index
+Everything profiled for Drip is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/drip/](https://apis.io/providers/drip/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (12)
 
-- Email Marketing
-- Marketing Automation
-- Ecommerce
-- Customer Engagement
-- Campaigns
-- Workflows
+- [Drip REST API](https://apis.io/apis/drip/drip-api/) — REST API for Drip exposing subscribers, tags, custom fields, broadcasts, email campaigns, events, conversions, workflows, shopper activity (orders, carts,…
+- [Drip Accounts API](https://apis.io/apis/drip/drip-accounts-api/) — The Accounts API from Drip — 2 operation(s) for accounts.
+- [Drip Broadcasts API](https://apis.io/apis/drip/drip-broadcasts-api/) — The Broadcasts API from Drip — 2 operation(s) for broadcasts.
+- [Drip Campaigns API](https://apis.io/apis/drip/drip-campaigns-api/) — The Campaigns API from Drip — 5 operation(s) for campaigns.
+- [Drip Conversions API](https://apis.io/apis/drip/drip-conversions-api/) — The Conversions API from Drip — 1 operation(s) for conversions.
+- [Drip Custom Fields API](https://apis.io/apis/drip/drip-custom-fields-api/) — The Custom Fields API from Drip — 1 operation(s) for custom fields.
+- [Drip Events API](https://apis.io/apis/drip/drip-events-api/) — The Events API from Drip — 3 operation(s) for events.
+- [Drip Forms API](https://apis.io/apis/drip/drip-forms-api/) — The Forms API from Drip — 1 operation(s) for forms.
+- [Drip Orders API](https://apis.io/apis/drip/drip-orders-api/) — The Orders API from Drip — 1 operation(s) for orders.
+- [Drip Shopper Activity API](https://apis.io/apis/drip/drip-shopper-activity-api/) — The Shopper Activity API from Drip — 3 operation(s) for shopper activity.
+- [Drip Subscribers API](https://apis.io/apis/drip/drip-subscribers-api/) — The Subscribers API from Drip — 2 operation(s) for subscribers.
+- [Drip MCP Server](https://apis.io/apis/drip/drip-mcp/) — Drip operates a remote Model Context Protocol server at https://api.getdrip.com/mcp, protected by its OAuth 2.0 authorization server and discoverable…
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-05-11
-- **Modified:** 2026-05-11
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### AsyncAPI (1)
 
-### Drip REST API
+Event-driven and webhook contracts.
 
-REST API for Drip exposing subscribers, tags, custom fields, broadcasts, email campaigns, events, conversions, workflows, shopper activity (orders, carts, products), purchases, and webhooks. Supports both API token Basic authentication for private integrations and OAuth 2.0 for public apps, with a rate limit of 3,600 requests per hour.
+- [Drip Webhooks](https://apis.io/asyncapis/drip/drip-webhooks/)
 
-- **Human URL:** [https://developer.drip.com/](https://developer.drip.com/)
-- **Base URL:** `https://api.getdrip.com/v2`
+#### MCP servers (1)
 
-#### Tags
+Model Context Protocol servers that expose the API to agents.
 
-- Email Marketing
-- Marketing Automation
-- Subscribers
-- Campaigns
-- Workflows
+- [drip](https://apis.io/servers/drip/drip/)
 
-#### Properties
+#### Agentic access (1)
 
-- [Documentation](https://developer.drip.com/)
-- [Authentication](https://developer.drip.com/#authentication)
-- [Postman Collection](collections/drip.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/drip.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## Common Properties
+- [Drip Agentic Access](https://apis.io/agentic-access/drip/drip-agentic-access/)
 
-- [LinkedIn](https://www.linkedin.com/company/getdrip)
+#### Collections (11)
+
+Postman and Open Collection request collections.
+
+- [Drip REST API](https://apis.io/collections/drip/open-drip/)
+- [Drip REST Accounts API](https://apis.io/collections/drip/open-drip-accounts-api/)
+- [Drip REST Accounts Broadcasts API](https://apis.io/collections/drip/open-drip-broadcasts-api/)
+- [Drip REST Accounts Campaigns API](https://apis.io/collections/drip/open-drip-campaigns-api/)
+- [Drip REST Accounts Conversions API](https://apis.io/collections/drip/open-drip-conversions-api/)
+- [Drip REST Accounts Custom Fields API](https://apis.io/collections/drip/open-drip-custom-fields-api/)
+- [Drip REST Accounts Events API](https://apis.io/collections/drip/open-drip-events-api/)
+- [Drip REST Accounts Forms API](https://apis.io/collections/drip/open-drip-forms-api/)
+- [Drip REST Accounts Orders API](https://apis.io/collections/drip/open-drip-orders-api/)
+- [Drip REST Accounts Shopper Activity API](https://apis.io/collections/drip/open-drip-shopper-activity-api/)
+- [Drip REST Accounts Subscribers API](https://apis.io/collections/drip/open-drip-subscribers-api/)
+
+#### Overlays (10)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Drip Accounts Overlay](https://apis.io/overlays/drip/drip-accounts-overlay/)
+- [Drip Broadcasts Overlay](https://apis.io/overlays/drip/drip-broadcasts-overlay/)
+- [Drip Campaigns Overlay](https://apis.io/overlays/drip/drip-campaigns-overlay/)
+- [Drip Conversions Overlay](https://apis.io/overlays/drip/drip-conversions-overlay/)
+- [Drip Custom Fields Overlay](https://apis.io/overlays/drip/drip-custom-fields-overlay/)
+- [Drip Events Overlay](https://apis.io/overlays/drip/drip-events-overlay/)
+- [Drip Forms Overlay](https://apis.io/overlays/drip/drip-forms-overlay/)
+- [Drip Orders Overlay](https://apis.io/overlays/drip/drip-orders-overlay/)
+- [Drip Shopper Activity Overlay](https://apis.io/overlays/drip/drip-shopper-activity-overlay/)
+- [Drip Subscribers Overlay](https://apis.io/overlays/drip/drip-subscribers-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Drip Authentication](https://apis.io/security/drip/drip-authentication/)
+- [Drip Domain Security](https://apis.io/security/drip/drip-domain-security/)
+- [Drip Vulnerability Disclosure](https://apis.io/security/drip/drip-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Drip Scopes](https://apis.io/scopes/drip/drip-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Drip Plans Pricing](https://apis.io/plans/drip/drip-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Drip Rate Limits](https://apis.io/rate-limits/drip/drip-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://www.drip.com)
 - [Documentation](https://developer.drip.com/)
-- [Sign Up](https://www.drip.com/forms/79091116/submissions/new)
+- [Getting started](https://developer.drip.com/#introduction)
+- [API reference](https://developer.drip.com/)
 - [Pricing](https://www.drip.com/pricing)
-- [Login](https://www.getdrip.com/login)
 - [Support](https://help.drip.com/)
 - [Blog](https://www.drip.com/learn)
-- [GitHub Organization](https://github.com/DripEmail)
+- [Terms of service](https://www.drip.com/terms)
+- [Privacy policy](https://www.drip.com/privacy)
+- [GitHub](https://github.com/DripEmail)
+- [Status](https://status.drip.com/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 55.5** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 52.8 |
+| Contract governance | 18.2 |
+| Operational transparency | 68.4 |
+| Developer ergonomics | 54.2 |
+| Access clarity | 38.2 |
+
+**Agent readiness 48.6** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 40.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/drip/](https://apis.io/providers/drip/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Drip: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/drip/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
